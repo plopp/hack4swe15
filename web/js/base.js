@@ -61,6 +61,8 @@
 	pathFinder.prototype.initMap = function() {
 		var t = this;
 		var cvs = addElm('canvas');
+		cvs.width = 1000;
+		cvs.height = 500;
 		cvs.style.width = '100%';
 		cvs.style.height = '100%';
 		t.size = size;
@@ -205,13 +207,14 @@
 		//console.log('gotLayer',data);
 		if (data.channels) {
 			t.layer[data.id||'1'] = data;
+			console.log('loading ' + data.image);
 			var img = new Image();
 			img.onload = function() {
-				t.ctx.drawImage(this,0,0, size.width, size.height);
-				var imageData = t.ctx.getImageData(0, 0, size.width, size.height);
-				console.log('loaded');
+				t.ctx.drawImage(this,0,0, t.size.width, t.size.height);
+				var imageData = t.ctx.getImageData(0, 0, t.size.width, t.size.height);
 				var d = data.imageData = imageData.data;
 				mapValuesInLayer(data);
+				console.log('loaded ' + data.image);
 				cb();
 			};
 			img.src = data.image;
