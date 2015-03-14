@@ -7,6 +7,7 @@
 	<script type='text/javascript' src='js/overlaycanvas.js'></script>
 	<script type='text/javascript' src='bower_components/pathfinding/pathfinding-browser.js'></script>
 	<script type='text/javascript' src='js/astar.js'></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.0/dygraph-combined.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -115,28 +116,10 @@
 					var nofPoints = 0 //Counts clicks
 					var waitingForStartClick = false;
 					var waitingForEndClick = false;
-					var butts =document.getElementsByTagName("button");
 					var startx = 0;
 					var starty = 0;
 					var endx = 0;
 					var endy = 0;
-					for(var z =0; z < butts.length; z++){
-						var elem = butts[z];
-						//console.log(elem);
-						elem.onclick = function(event){
-							var id = event.toElement.id;
-							switch(id){
-								case "setStart":
-									waitingForStartClick = true;
-									console.log("Start");
-									break;
-								case "setEnd":
-									waitingForEndClick = true;
-									console.log("End");
-									break;
-							}
-						}
-					}
 
 					var centerlatlng = new google.maps.LatLng(60.627800,15.660929);
 
@@ -153,29 +136,28 @@
 					var map = new google.maps.Map(document.getElementById("map"),myOptions);
 
 					google.maps.event.addListener(map, 'click', function(event) {
-						console.log(cntDiv);
+						//console.log(cntDiv);
 						switch(nofPoints){
 							case 0:
 								startx = event.pixel.x;
 								starty = event.pixel.y;
-								console.log("Start: "+startx+" "+starty);
+								//console.log("Start: "+startx+" "+starty);
 								document.getElementById("clickStatus").innerHTML = "Select point B!";
 								nofPoints++;
 								break;
 							case 1:
 								endx = event.pixel.x;
 								endy = event.pixel.y;
-								console.log("End: "+endx+" "+endy);
+								//console.log("End: "+endx+" "+endy);
 								document.getElementById("clickStatus").innerHTML = "Select point A!";
 
 								finder.getMergedArray(prepareSearch);
 								nofPoints = 0;
 								break;
 						}
-						console.log(nofPoints);
-				    	console.log(event.pixel);
+						//console.log(nofPoints);
+				    	//console.log(event.pixel);
 				  	});
-
 
 					var canvasElement = document.createElement('canvas');
 					canvasElement.width = '1000';
@@ -200,7 +182,7 @@
 					var bn = new google.maps.LatLngBounds(sw,ne);
 
 					overlay = new SimulatorOverlay(bn, cntDiv, map,function(){
-						console.log("Added overlay");
+						//console.log("Added overlay");
 					}/*,sim*/);
 
 					var prepareSearch = function(data) {
@@ -224,7 +206,37 @@
 							heuristic: PF.Heuristic.euclidean
 						});
 						var result = pathfinder.findPath(startx, starty, endx, endy, grid);
-						console.log('result', result);
+						//console.log('result', result);
+
+						var totDist = 0;
+						distArr = [[0,0]];
+						for (var i = 1; i < result.length; i++) {
+							var x = result[i][0]-result[i-1][0];
+							var y = result[i][1]-result[i-1][1];
+							totDist += Math.sqrt(x*x + y*y);
+							distArr.push([i,totDist]);
+						};
+
+						console.log(distArr);
+
+						new Dygraph(
+				            document.getElementById("div_g"),
+				            distArr, {
+								rollPeriod: 7,
+								//legend: 'always',
+								title: 'Topology',
+								titleHeight: 16,
+								drawAxis: false,
+								drawXGrid: false,
+								drawYGrid: false,
+								drawLabels: false,
+								labelsDivStyles: {
+									'text-align': 'right',
+									'background': 'none'
+								},
+								strokeWidth: 1.5
+				            }
+				        );
 
 						// // var graph = new Graph(data, { diagonal: false });
 						// var start = graph.grid[starty][startx];
@@ -241,8 +253,7 @@
 
 						ctx.beginPath();
 						ctx.rect(0,0,canvasElement.width,canvasElement.height);
-
-						console.log("Area size: "+canvasElement.width+"px "+canvasElement.height+"px");
+						//console.log("Area size: "+canvasElement.width+"px "+canvasElement.height+"px");
 						ctx.stroke();
 
 						var flightPlanCoordinates = [];
@@ -279,7 +290,7 @@
 					}
 
 					var constraintChangeCallback = function(){
-						console.log("Changed!");
+						//console.log("Changed!");
 						finder.getMergedArray(prepareSearch);
 					}
 
@@ -291,9 +302,43 @@
 
 		</script>
 		<div class="guidiv">
-			<button id="setStart">Set start point</button>
-			<button id="setEnd">Set end point</button>
 			<div id="clickStatus" style="width: 100px; height: 40px; color: #000000; background: #FFFFFF; padding: 10px; margin: 4px">Select point A!</div>
 		</div>
+		<div id="metrics">
+			<div id="div_g" class="chart"></div>
+			<table style="width:100%">
+			  	<tr>
+			    	<td>Distance:</td>
+			    	<td align="right"><b>2.3</b></td>
+			    	<td>km</td>
+			  	</tr>
+			  	<tr>
+			    	<td>Cost:</td> 
+			    	<td align="right"><b>123</b></td> 
+			    	<td>:-</td>
+			  	</tr>
+			  	<tr>
+			  		<td>Road:</td>
+			  		<td align="right"><b>72</b></td> 
+			  		<td>%</td>
+			  	</tr>
+			  	<tr>
+			  		<td>Forest:</td>
+			  		<td align="right"><b>16</b></td> 
+			  		<td>%</td>
+			  	</tr>
+			  	<tr>
+			  		<td>Ascent:</td>
+			  		<td align="right"><b>40</b></td> 
+			  		<td>m</td>
+			  	</tr>
+			  	<tr>
+			  		<td>Descent:</td>
+			  		<td align="right"><b>16</b></td> 
+			  		<td>m</td>
+			  	</tr>
+			</table>
+		</div>
+		
 </body>
 </html>
