@@ -29,3 +29,10 @@ body {
 	z-index: 100;
 	padding:10px 10px 10px 10px
 }
+
+#debug {
+	position: absolute;
+	right: 300px;
+	top: 10px;
+	z-index: 100;
+}
