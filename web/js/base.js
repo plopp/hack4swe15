@@ -39,7 +39,7 @@
 		t.layerEnabled = {};
 		t.layer = {};
 		t.map = map;
-		t.showDebug = true;
+		t.showDebug = false;
 		t.outData = [];
 		/*for(var y =0;y<size.height;y++) {
 			var line = [];
@@ -134,7 +134,7 @@
 		(function() {
 			var prt = addElm('li');
 			var lbl = addElm('label',{'for':'prc_'+i});
-			var inp2 = addElm('input',{'id':'prc_'+i,'type':'checkbox',checked:1});
+			var inp2 = addElm('input',{'id':'prc_'+i,'type':'checkbox'});
 			inp2.addEventListener('change',function() {
 				t.showDebug = this.checked;
 				t.changeCallback && t.changeCallback();
