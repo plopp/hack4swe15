@@ -372,6 +372,7 @@
 		
 
 		var data = t.outData;
+console.log('data', data, t.size);
 
 		var grid = new PF.Grid(t.size.width,t.size.height,data);
 		var pathfinder = new PF.AStarFinder({

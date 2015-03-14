@@ -15,6 +15,13 @@ function SimulatorOverlay(bn, elm, map, finder,cb) {
   this.setMap(map);
 }
 
+function lerp(x, xmin, xmax, outmin, outmax) {
+  x = (x - xmin) / (xmax - xmin);
+  x = Math.max(0, Math.min(1,  x));
+  x = (x * (outmax - outmin)) + outmin;
+  return x;
+}
+
 /**
  * onAdd is called when the map's panes are ready and the overlay has been
  * added to the map.
@@ -26,40 +33,45 @@ console.log('onAdd',this._elm);
   // Add the element to the "overlayLayer" pane.
   var panes = this.getPanes();
 
-  
   var t = this;
   google.maps.event.addListener(this.map_, 'click', function(e) {
     var ll = e.latLng;
-    var overlayProjection = t.getProjection();
-    var pos = overlayProjection.fromLatLngToDivPixel(ll);
-    var oelm = t._elm;
-    //var fx = (oelm.offsetWidth/1024);
-    //var fy = (oelm.offsetHeight/768);
-    pos.x = Math.round(pos.x-oelm.offsetLeft);
-    pos.y = Math.round(pos.y-oelm.offsetTop);
-    //console.log('click',pos);
-    
+
+    var sw = t.bounds_.getSouthWest();
+    var ne = t.bounds_.getNorthEast();
+
+    var pos = {
+      x: Math.floor(lerp( ll.lng(), sw.lng(), ne.lng(), 0, t._finder.size.width )),
+      y: Math.floor(lerp( ll.lat(), ne.lat(), sw.lat(), 0, t._finder.size.height )),
+    };
+
+    console.log('pos', pos);
+
     t._finder[t.startPosition?'setStart':'setEnd'](pos,ll);
     t.startPosition = !t.startPosition;
   });
-/*
-  google.maps.event.addListener(this.map_, 'mousemove', function(e) {
-    var ll = e.latLng;
-    var pos = overlayProjection.fromLatLngToDivPixel(ll);
-    // console.log('mousemove',ll,pos);
-    var oelm = t._elm;
-    //var fx = (oelm.offsetWidth/1024);
-    //var fy = (oelm.offsetHeight/768);
-    //t._sim.updateMousePosition((pos.x-t._elm.offsetLeft)/fx,(pos.y-t._elm.offsetTop)/fy);
-  });
-*/
+
   panes.overlayLayer.appendChild(this._elm);
 };
 
 SimulatorOverlay.prototype.getPos = function(x,y) {
+  var t = this;
     var proj = this.getProjection();
     var oelm = this._elm;
-    return proj.fromDivPixelToLatLng(new google.maps.Point(x+oelm.offsetLeft,y+oelm.offsetTop));
+
+    var sw = t.bounds_.getSouthWest();
+    var ne = t.bounds_.getNorthEast();
+
+    var pos = {
+      x: lerp( x, 0, t._finder.size.width, sw.lng(), ne.lng() ),
+      y: lerp( y, 0, t._finder.size.height, ne.lat(), sw.lat() )
+    };
+
+    console.log(x,y,pos);
+
+    return new google.maps.LatLng(pos.y, pos.x);
+
+    // return proj.fromDivPixelToLatLng(new google.maps.Point(x+oelm.offsetLeft,y+oelm.offsetTop));
 }
 
 SimulatorOverlay.prototype.draw = function() {
