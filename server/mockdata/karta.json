@@ -2,5 +2,14 @@
 	"id": "karta",
 	"filename": "karta.jpg",
 	"filetype": "image/jpeg",
-	"description": "Kartlager, debug"
+	"description": "Kartlager, Debug",
+	"channels": [
+		{
+			"channel": 0,
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ 1.0, -1.0 ],
+			"name": "delta",
+			"unit": "%"
+		}
+	]
 }

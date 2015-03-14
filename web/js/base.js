@@ -35,11 +35,12 @@
 		t.layerMultiplier = {};
 		t.layerEnabled = {};
 		t.layer = {};
+		t.showDebug = true;
 		t.obj = {
 			debug: d.getElementById('debug'),
 			params: d.getElementById('params'),
 			map: d.getElementById('map'),
-			overlay:d.getElementById('overlay')
+			overlay:d.getElementById('overlay'),
 		}
 		t.settings = {
 			clickState:0
@@ -74,13 +75,13 @@
 					t.mergeLayers();
 					t.changeCallback && t.changeCallback();
 				},false);
-				inp.addEventListener('change',function() {
+				inp2.addEventListener('change',function() {
 					t.layerEnabled[i] = this.checked;
 					t.mergeLayers();
 					t.changeCallback && t.changeCallback();
 				},false);
 				t.layerMultiplier[i] = 1;
-				t.layerEnabled[i] = 1;
+				t.layerEnabled[i] = true;
 				prt.appendChild(inp2);
 				prt.appendChild(lbl);
 				lbl.innerHTML = t.layer[i].description;
@@ -89,6 +90,19 @@
 				t.obj.params.appendChild(prt);
 			})(j);
 		}
+		(function() {
+			var prt = addElm('li');
+			var lbl = addElm('label',{'for':'prc_'+i});
+			var inp2 = addElm('input',{'id':'prc_'+i,'type':'checkbox',checked:1});
+			inp2.addEventListener('change',function() {
+				t.showDebug = this.checked;
+				t.changeCallback && t.changeCallback();
+			},false);
+			prt.appendChild(inp2);
+			prt.appendChild(lbl);
+			lbl.innerHTML = 'Show debug layer';
+			t.obj.params.appendChild(prt);
+		})();
 	}
 
 	pathFinder.prototype.getLayers = function(layers) {
@@ -119,23 +133,10 @@
 	}
 
 	function mapValuesInLayer(layerDefinition) {
-		// console.log('map values input', layerDefinition);
-
 		var imgdatapixels = layerDefinition.imageData;
-
-		// layerDefinition.normalizedValues = [];
 		layerDefinition.absoluteValues = null;
 
-		for(var j = 0;j<layerDefinition.channels.length;j++) {
-			var ch = layerDefinition.channels[j];
-			if (!ch.map) {
-			}
-			else {
-			}
-		}
-
 		function clamp(v) {
-			// return v;
 			return Math.min(Math.max(v, 0), 1);
 		};
 
@@ -160,8 +161,6 @@
 
 			layerDefinition.absoluteValues = absoluteValues;
 		});
-
-		// console.log('map values output', layerDefinition.absoluteValues);
 	}
 
 	pathFinder.prototype.drawDebug = function(ctx) {
@@ -199,7 +198,7 @@
 				var tot = 0;
 				for(var i in t.layer) {
 					var lay = t.layer[i];
-					if (lay.absoluteValues) {
+					if (lay.absoluteValues && t.layerEnabled[i]) {
 						if (x == 10 && y == 10) console.log(lay ,t );
 						tot += lay.absoluteValues[y * size.width + x] * (t.layerMultiplier[i] + 0.01);
 					}

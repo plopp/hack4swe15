@@ -232,60 +232,49 @@
 						var ctx = canvasElement.getContext("2d");
 						ctx.clearRect(0,0,canvasElement.width,canvasElement.height);
 						ctx.fillStyle = "#FF0000";
-						ctx.strokeStyle = "#FF0000";
+						ctx.strokeStyle = "#FF00FF";
 
-						finder.drawDebug(ctx);
+						if (finder.showDebug) {
+							finder.drawDebug(ctx);
+						}
 
 						ctx.beginPath();
 						ctx.rect(0,0,canvasElement.width,canvasElement.height);
+
 						console.log("Area size: "+canvasElement.width+"px "+canvasElement.height+"px");
 						ctx.stroke();
 
-						ctx.beginPath();
-						// var result = astar.search(graph, start, end);
-
-						var flightPlanCoordinates = [
-						  ];
+						var flightPlanCoordinates = [];
 
 						for (var i = 0; i < result.length; i++) {
-
 							var x = result[i][0];
 							var y = result[i][1];
 							console.log(x,y,overlay);
-
-							var latLng = overlay.getPos(x,y);//overlay.projection.fromPointToLatLng(x,y);
-							
+							var latLng = overlay.getPos(x,y);
 							flightPlanCoordinates.push(latLng);
 						}
 
-						  var flightPath = new google.maps.Polyline({
-						    path: flightPlanCoordinates,
-						    geodesic: true,
-						    strokeColor: '#FF0000',
-						    strokeOpacity: 1.0,
-						    strokeWeight: 2
-						  });
+						var flightPath = new google.maps.Polyline({
+							path: flightPlanCoordinates,
+							geodesic: true,
+							strokeColor: '#FF0000',
+							strokeOpacity: 1.0,
+							strokeWeight: 2
+						});
 
-						  flightPath.setMap(map);
+						flightPath.setMap(map);
 
-
-						
-
-						for (var i = 0; i < result.length; i++) {
-							var x = result[i][0];
-							var y = result[i][1];
-							/* if (result[i].closed) {
-								ctx.strokeStyle = 'green';
+						if (finder.showDebug) {
+							ctx.beginPath();
+							for (var i = 0; i < result.length; i++) {
+								var x = result[i][0];
+								var y = result[i][1];
+								ctx.strokeStyle = 'blue';
 								ctx.lineTo(x,y);
 								ctx.moveTo(x,y);
-							} else {
-							*/
-							ctx.strokeStyle = 'blue';
-							ctx.lineTo(x,y);
-							ctx.moveTo(x,y);
-							// }
-						};
-						ctx.stroke();
+							};
+							ctx.stroke();
+						}
 					}
 
 					var constraintChangeCallback = function(){
@@ -295,7 +284,6 @@
 
 					finder = window.initSearch(map,constraintChangeCallback);
 					var projection;
-					
 
 					// result is an array containing the shortest path
 				});
