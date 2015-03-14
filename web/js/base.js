@@ -27,6 +27,8 @@
 
 	pathFinder.prototype.init = function(map) {
 		var t = this;
+		t.canvas = addElm('canvas');
+		t.ctx = t.canvas.getContext('2d');
 		t.layer = {};
 		t.obj = {
 			params: d.getElementById('params'),
@@ -59,7 +61,7 @@
 			var lbl = addElm('label',{'for':'prm_'+i});
 			prt.appendChild(lbl);
 			var inp = addElm('input',{'':''});
-			
+			t.obj.params.appendChild(prt);
 		}
 		
 	}
@@ -78,14 +80,21 @@
 		t.layer[data.id||'1'] = data;
 		var img = new Image();
 		img.onload = function() {
+			t.ctx.drawImage(this,0,0);
+			var imageData = t.ctx.getImageData(0, 0, steps[0], steps[1]);
 			console.log('loaded');
+
+        	data.imageData = imageData.data;
+        	t.mergeLayers();
 		};
 		img.src = data.image;
 		t.repaintParams();
 	}
 
 	pathFinder.prototype.mergeLayers = function() {
-
+		for(var i in t.layers) {
+			console.log(i,v);
+		});
 	}
 
 	pathFinder.prototype.getMergedArray = function(cb) {
