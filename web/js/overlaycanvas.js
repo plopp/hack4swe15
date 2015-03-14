@@ -3,7 +3,7 @@ SimulatorOverlay.prototype = new google.maps.OverlayView();
 // Initialize the map and the custom overlay.
 
 /** @constructor */
-function SimulatorOverlay(bn, elm, map,finder,cb) {
+function SimulatorOverlay(bn, elm, map, finder,cb) {
   this.bounds_ = bn;
   this.myb = bn;
   this._elm = elm;
@@ -22,21 +22,25 @@ function SimulatorOverlay(bn, elm, map,finder,cb) {
 SimulatorOverlay.prototype.onAdd = function() {
   if (this._cb)
     this._cb();
-
+console.log('onAdd',this._elm);
   // Add the element to the "overlayLayer" pane.
   var panes = this.getPanes();
 
-  var overlayProjection = this.getProjection();
+  
   var t = this;
-
   google.maps.event.addListener(this.map_, 'click', function(e) {
     var ll = e.latLng;
+    var overlayProjection = t.getProjection();
     var pos = overlayProjection.fromLatLngToDivPixel(ll);
     var oelm = t._elm;
     //var fx = (oelm.offsetWidth/1024);
     //var fy = (oelm.offsetHeight/768);
-    this._finder[this.startPosition?'setStart':'setEnd'](e,pos,ll);
-    this.startPosition = !this.startPosition;
+    pos.x = Math.round(pos.x-oelm.offsetLeft);
+    pos.y = Math.round(pos.y-oelm.offsetTop);
+    //console.log('click',pos);
+    
+    t._finder[t.startPosition?'setStart':'setEnd'](pos,ll);
+    t.startPosition = !t.startPosition;
   });
 /*
   google.maps.event.addListener(this.map_, 'mousemove', function(e) {
@@ -54,7 +58,8 @@ SimulatorOverlay.prototype.onAdd = function() {
 
 SimulatorOverlay.prototype.getPos = function(x,y) {
     var proj = this.getProjection();
-    return proj.fromDivPixelToLatLng(new google.maps.Point(x,y));
+    var oelm = this._elm;
+    return proj.fromDivPixelToLatLng(new google.maps.Point(x+oelm.offsetLeft,y+oelm.offsetTop));
 }
 
 SimulatorOverlay.prototype.draw = function() {

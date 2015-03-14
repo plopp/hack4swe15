@@ -113,7 +113,7 @@
 
 		<script type="text/javascript">
 				window.addEventListener('load', function() {
-					var nofPoints = 0 //Counts clicks
+					/*var nofPoints = 0 //Counts clicks
 					var waitingForStartClick = false;
 					var waitingForEndClick = false;
 					var startx = 0;
@@ -162,8 +162,8 @@
 					var canvasElement = document.createElement('canvas');
 					canvasElement.width = '1000';
 					canvasElement.height = '500';
-					canvasElement.style.width = '100%';
-					canvasElement.style.height = '100%';
+					//canvasElement.style.width = '100%';
+					//canvasElement.style.height = '100%';
 
 					var cntDiv = document.createElement('div');
 					cntDiv.style.position = 'absolute';
@@ -181,9 +181,9 @@
 					var ne = new google.maps.LatLng( 60.654928439140036, 15.746583938598633 );
 					var bn = new google.maps.LatLngBounds(sw,ne);
 
-					overlay = new SimulatorOverlay(bn, cntDiv, map,function(){
-						//console.log("Added overlay");
-					}/*,sim*/);
+					overlay = new SimulatorOverlay(bn, cntDiv, map, finder, function(){
+						console.log("Added overlay");
+					});
 
 					var prepareSearch = function(data) {
 						// console.log('prepareSearch', data);
@@ -293,9 +293,22 @@
 						//console.log("Changed!");
 						finder.getMergedArray(prepareSearch);
 					}
+*/
 
-					finder = window.initSearch(map,constraintChangeCallback);
-					var projection;
+					var map = new google.maps.Map(document.getElementById("map"),{
+						disableDefaultUI: true,
+						zoom:14,
+						center:new google.maps.LatLng(60.627800,15.660929),
+						mapTypeId:google.maps.MapTypeId.SATELLITE,
+						draggableCursor:'crosshair',
+						//styles:layerStyle[0],
+						scaleControl:false
+					});
+					
+					finder = window.initSearch(map,function() {
+						console.log('change');
+					});
+					
 
 					// result is an array containing the shortest path
 				});

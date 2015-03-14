@@ -35,7 +35,16 @@
 		t.layerMultiplier = {};
 		t.layerEnabled = {};
 		t.layer = {};
+		t.map = map;
 		t.showDebug = true;
+		t.outData = [];
+		/*for(var y =0;y<size.height;y++) {
+			var line = [];
+			t.outData.push(line);
+			for(var x =0;x<size.width;x++)
+				line.push(0);
+		}
+		*/
 		t.obj = {
 			debug: d.getElementById('debug'),
 			params: d.getElementById('params'),
@@ -46,7 +55,31 @@
 			clickState:0
 		};
 		t.params = {};
+		t.initMap();
+	}
 
+	pathFinder.prototype.initMap = function() {
+		var t = this;
+		var cvs = addElm('canvas');
+		cvs.style.width = '100%';
+		cvs.style.height = '100%';
+		t.size = size;
+		var cnt = addElm('div');
+		cnt.style.width = '100%';
+		cnt.style.height = '100%';
+		cnt.style.border = 'solid 1px blue';
+		cnt.style.position = 'absolute';
+		cnt.style.zIndex = '500';
+		cnt.appendChild(cvs);
+		// Bounds for pathfinder
+		var sw = new google.maps.LatLng(60.627800,15.660929);
+		var ne = new google.maps.LatLng(60.645859,15.724571);
+		var bounds = new google.maps.LatLngBounds(sw,ne);
+		
+		this.overlay = new SimulatorOverlay(bounds, cnt, this.map, this, function(){
+			console.log('added');
+		});
+		this.overlay.setMap(this.map);
 	}
 
 	function addElm(nn,opt) {
@@ -169,7 +202,7 @@
 
 	pathFinder.prototype.gotLayer = function(data, cb) {
 		var t = this;
-		console.log('gotLayer',data);
+		//console.log('gotLayer',data);
 		if (data.channels) {
 			t.layer[data.id||'1'] = data;
 			var img = new Image();
@@ -204,12 +237,13 @@
 					}
 				}
 				thisLine.push(tot);
+				//t.grid.setWalkableAt(x, y, true);
+				//t.grid.setWeightAt(x, y, tot);
 			}
 			arr.push(thisLine);
 		}
 
 		t.outData = arr;
-
 		console.log('final output', arr);
 
 		t.paintMergedLayer();
@@ -271,12 +305,69 @@
 		});
 	}
 
-	pathFinder.prototype.setStart = function() {
-
+	pathFinder.prototype.setStart = function(pos) {
+		this.startPos = pos;
+		console.log('set start',pos);
 	}
 
-	pathFinder.prototype.setEnd = function() {
+	pathFinder.prototype.plotPath = function(result) {
+		// Plot on map
+		console.log('got result',result);
+		var t = this;
+		var pathCoord = [];
+		for (var i = 0; i < result.length; i++) {
+			var x = result[i][0];
+			var y = result[i][1];
+			//console.log(x,y,t.overlay);
+			var latLng = t.overlay.getPos(x,y);
+			pathCoord.push(latLng);
+		}
+		if (t.currentPoly)
+			t.currentPoly.setMap(null);
+		var flightPath = t.currentPoly = new google.maps.Polyline({
+			path: pathCoord,
+			geodesic: true,
+			strokeColor: '#FF0000',
+			strokeOpacity: 1.0,
+			strokeWeight: 2
+		});
+
+		flightPath.setMap(t.map);
+	}
+
+	pathFinder.prototype.findPath = function() {
+		var t = this;
 		
+
+		var data = t.outData;
+
+		var grid = new PF.Grid(t.size.width,t.size.height,data);
+		var pathfinder = new PF.AStarFinder({
+			heuristic: PF.Heuristic.euclidean
+		});
+
+
+
+		for(var j=0; j<t.size.height-1; j++) {
+			for(var i=0; i<t.size.width-1; i++) {
+				grid.setWalkableAt(i, j, true);
+				//console.log('här',data[j][i]);
+				grid.setWeightAt(i, j, data[j][i]);
+			}
+		}
+
+		console.log('findpath',t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y,t.size);
+
+		var result = pathfinder.findPath(t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y, grid);
+		t.plotPath(result);
+	}
+
+	pathFinder.prototype.setEnd = function(pos) {
+		console.log('set end',pos);
+		var t = this;
+		t.endPos = pos;
+		t.findPath();
+
 	}
 
 	function mapOverlay(map) {
@@ -294,7 +385,9 @@
 	var tmpLayers = ['layer1'];
 
 	w.initSearch = function(map,changeCallbak) {
-		console.log('init',map);
+		
+
+
 		finder.init(map,changeCallbak);
 		jsonGet('/1/layers',function(d) {
 			finder.getLayers(d['layers']);	
