@@ -313,6 +313,35 @@
 	pathFinder.prototype.plotPath = function(result) {
 		// Plot on map
 		console.log('got result',result);
+
+		var totDist = 0;
+		distArr = [[0,0]];
+		for (var i = 1; i < result.length; i++) {
+			var x = result[i][0]-result[i-1][0];
+			var y = result[i][1]-result[i-1][1];
+			totDist += Math.sqrt(x*x + y*y);
+			distArr.push([i,totDist]);
+		};
+
+		new Dygraph(
+            d.getElementById("div_g"),
+            distArr, {
+				rollPeriod: 7,
+				//legend: 'always',
+				title: 'Topology',
+				titleHeight: 16,
+				drawAxis: false,
+				drawXGrid: false,
+				drawYGrid: false,
+				drawLabels: false,
+				labelsDivStyles: {
+					'text-align': 'right',
+					'background': 'none'
+				},
+				strokeWidth: 1.5
+            }
+        );
+
 		var t = this;
 		var pathCoord = [];
 		for (var i = 0; i < result.length; i++) {
