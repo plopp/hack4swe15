@@ -2,8 +2,20 @@
 <html>
 <head>
 	<link rel="stylesheet" href="css/style.css" />
-	<script type="text/javascript" src="base.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	<script type='text/javascript' src='js/astar.js'></script>
+	<script type='text/javascript'>
+		var graph = new Graph([
+			[1,1,1,1],
+			[0,1,1,0],
+			[0,0,1,1]
+		]);
+		var start = graph.grid[0][0];
+		var end = graph.grid[1][2];
+		var result = astar.search(graph, start, end);
+		// result is an array containing the shortest path
+	</script>
 </head>
 <body>
 <script type="text/javascript">
@@ -119,14 +131,21 @@
 				center:centerlatlng,
 				mapTypeId:google.maps.MapTypeId.TERRAIN,
 				draggableCursor:'crosshair',
-				styles:layerStyle[0],
 				scaleControl:false
 			};
 			var map = new google.maps.Map(document.getElementById("map"),myOptions);
+<<<<<<< HEAD
 			window.initSearch(map);
 		});
 		
 
+=======
+			});
+		google.maps.event.addListenerOnce(map,"projection_changed", function() {
+				projection = map.getProjection();
+				console.log('change',projection);
+			});
+>>>>>>> origin/master
 			</script>	
 </body>
 </html>
