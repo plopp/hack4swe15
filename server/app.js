@@ -7,7 +7,7 @@ var layers = [
 	'berg',
 	'forn',
 	'hojd',
-	// 'karta',
+	'karta',
 	'osamjord',
 	'skog',
 	'urberg',

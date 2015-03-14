@@ -30,7 +30,10 @@
 		t.canvas = addElm('canvas');
 		t.canvas.width = size.width;
 		t.canvas.height = size.height;
-		t.changeCallback = cb;
+		t.changeCallback = function() {
+			t.findPath();
+		};
+		t.canvas.style.opacity = 0.5;
 		t.ctx = t.canvas.getContext('2d');
 		t.layerMultiplier = {};
 		t.layerEnabled = {};
@@ -63,6 +66,7 @@
 		var cvs = addElm('canvas');
 		cvs.width = 1000;
 		cvs.height = 500;
+		cvs.style.opacity = 0.5;
 		cvs.style.width = '100%';
 		cvs.style.height = '100%';
 		t.size = size;
@@ -73,9 +77,10 @@
 		cnt.style.position = 'absolute';
 		cnt.style.zIndex = '500';
 		cnt.appendChild(cvs);
+		t.debugCanvas = cvs;
 		// Bounds for pathfinder
 		var sw = new google.maps.LatLng( 60.619197236209565, 15.63852310180664 );
-		var ne = new google.maps.LatLng( 60.654928439140036, 15.746583938598633 );
+		var ne = new google.maps.LatLng( 60.655159784262224, 15.746927261352539 );
 		var bounds = new google.maps.LatLngBounds(sw,ne);
 		
 		this.overlay = new SimulatorOverlay(bounds, cnt, this.map, this, function(){
@@ -347,6 +352,36 @@
 	}
 
 	pathFinder.prototype.plotPath = function(result) {
+		var t = this;
+
+
+		var ctx = t.debugCanvas.getContext("2d");
+		ctx.clearRect(0,0,t.debugCanvas.width,t.debugCanvas.height);
+		ctx.fillStyle = "#FF0000";
+		ctx.strokeStyle = "#FF00FF";
+
+		if (finder.showDebug) {
+			finder.drawDebug(ctx);
+		}
+
+		ctx.beginPath();
+		ctx.rect(0,0,t.debugCanvas.width,t.debugCanvas.height);
+		ctx.stroke();
+
+		if (finder.showDebug) {
+			ctx.beginPath();
+			for (var i = 0; i < result.length; i++) {
+				var x = result[i][0];
+				var y = result[i][1];
+				ctx.strokeStyle = 'blue';
+				ctx.lineTo(x,y);
+				ctx.moveTo(x,y);
+			};
+			ctx.stroke();
+		}
+
+
+
 		// Plot on map
 		console.log('got result',result);
 
@@ -451,18 +486,11 @@
 
 	pathFinder.prototype.findPath = function() {
 		var t = this;
-		
-
 		var data = t.outData;
-console.log('data', data, t.size);
-
 		var grid = new PF.Grid(t.size.width,t.size.height,data);
 		var pathfinder = new PF.AStarFinder({
 			heuristic: PF.Heuristic.euclidean
 		});
-
-
-
 		for(var j=0; j<t.size.height-1; j++) {
 			for(var i=0; i<t.size.width-1; i++) {
 				grid.setWalkableAt(i, j, true);
@@ -470,11 +498,9 @@ console.log('data', data, t.size);
 				grid.setWeightAt(i, j, data[j][i]);
 			}
 		}
-
 		console.log('findpath',t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y,t.size);
-
-		var result = pathfinder.findPath(t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y, grid);
-		t.plotPath(result);
+		t.result = pathfinder.findPath(t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y, grid);
+		t.plotPath(t.result);
 	}
 
 	pathFinder.prototype.setEnd = function(pos) {
@@ -482,7 +508,6 @@ console.log('data', data, t.size);
 		var t = this;
 		t.endPos = pos;
 		t.findPath();
-
 	}
 
 	function mapOverlay(map) {
