@@ -187,10 +187,16 @@
 					cntDiv.style.position = 'absolute';
 					cntDiv.style.width = '100%';
 					cntDiv.style.height = '100%';
+					cntDiv.style.opacity = 0.5;
 					cntDiv.appendChild(canvasElement);
 
-					var sw = new google.maps.LatLng(60.627800,15.660929);
-					var ne = new google.maps.LatLng(60.645859,15.724571);
+					google.maps.event.addListener(map, 'click', function(e) {
+						var ll = e.latLng;
+						console.log('clicked at location', ll);
+					});
+
+					var sw = new google.maps.LatLng( 60.619197236209565, 15.63852310180664 );
+					var ne = new google.maps.LatLng( 60.654928439140036, 15.746583938598633 );
 					var bn = new google.maps.LatLngBounds(sw,ne);
 
 					overlay = new SimulatorOverlay(bn, cntDiv, map,function(){
@@ -244,7 +250,7 @@
 						for (var i = 0; i < result.length; i++) {
 							var x = result[i][0];
 							var y = result[i][1];
-							console.log(x,y,overlay);
+							// console.log(x,y,overlay);
 							var latLng = overlay.getPos(x,y);
 							flightPlanCoordinates.push(latLng);
 						}
