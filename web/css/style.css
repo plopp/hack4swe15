@@ -69,23 +69,6 @@ body {
 	font-size: 10pt;
 }
 
-#clickStatus { 
-	color: #000000; 
-	background: #FFFFFF; 
-	margin: 5px;
-	top: 5px;
-	right: 5px;
-	left: 5px;
-	height: 40px;
-	display: flex;
-    align-items: center;
-    justify-content: center;
-	z-index: 100000;
-	position: absolute;
-	border-radius: 5px;
-}
-
-
 #div_g .dygraph-label { font-family: Georgia, Verdana, serif; }
 
 #div_g .dygraph-title { font-size: 8px; text-shadow: gray 2px 2px 2px; }
