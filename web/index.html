@@ -124,16 +124,16 @@
 						scaleControl:false
 					};
 
-					var map = new google.maps.Map(document.getElementById("map"),myOptions);
-					finder = window.initSearch(map);
-					finder.getMergedArray(prepareSearch);
-
 					var prepareSeach = function(data){
 						var graph = new Graph(data);
 						var start = graph.grid[0][0];
 						var end = graph.grid[1][2];
 						var result = astar.search(graph, start, end);
 					}
+
+					var map = new google.maps.Map(document.getElementById("map"),myOptions);
+					finder = window.initSearch(map);
+					finder.getMergedArray(prepareSeach);
 
 					// result is an array containing the shortest path
 				});
