@@ -543,7 +543,8 @@
 		var data = t.outData;
 		var grid = new PF.Grid(t.size.width,t.size.height,data);
 		var pathfinder = new PF.AStarFinder({
-			heuristic: PF.Heuristic.euclidean
+			heuristic: PF.Heuristic.euclidean,
+			allowDiagonal: true
 		});
 		for(var j=0; j<t.size.height-1; j++) {
 			for(var i=0; i<t.size.width-1; i++) {
