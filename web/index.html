@@ -146,6 +146,10 @@
 
 					var map = new google.maps.Map(document.getElementById("map"),myOptions);
 
+					google.maps.event.addListener(map, 'click', function(event) {
+				    	console.log(event);
+				  	});
+
 					var canvasElement = document.createElement('canvas');
 					canvasElement.style.width = '100%';
 					canvasElement.style.height = '100%';
