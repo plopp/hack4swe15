@@ -655,7 +655,7 @@
 				},
 				update:function(st) {
 					var t = this;
-					t.cal.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+					t.cal.innerHTML = Math.round(st.distance*0.3)/10;
 				}
 			}]);
 		},
