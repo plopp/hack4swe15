@@ -1,14 +1,15 @@
 {
 	"id": "forn",
-	"filename": "forn.gif",
-	"filetype": "image/gif",
+	"filename": "forndist.jpg",
+	"filetype": "image/jpeg",
 	"description": "Fornlämningar",
 	"channels": [
 		{
 			"channel": 0,
-			"map": {
-				"255": "Fornlämning, akta!"
-			}
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ 0.0, 1.0 ],
+			"name": "delta",
+			"unit": "%"
 		}
 	]
 }
