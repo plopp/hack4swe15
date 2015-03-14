@@ -45,7 +45,7 @@ console.log('onAdd',this._elm);
       y: Math.floor(lerp( ll.lat(), ne.lat(), sw.lat(), 0, t._finder.size.height )),
     };
 
-    console.log('pos', pos);
+   // console.log('pos', pos);
 
     t._finder[t.startPosition?'setStart':'setEnd'](pos,ll);
     t.startPosition = !t.startPosition;
@@ -67,7 +67,7 @@ SimulatorOverlay.prototype.getPos = function(x,y) {
       y: lerp( y, 0, t._finder.size.height, ne.lat(), sw.lat() )
     };
 
-    console.log(x,y,pos);
+//    console.log(x,y,pos);
 
     return new google.maps.LatLng(pos.y, pos.x);
 

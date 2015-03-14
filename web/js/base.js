@@ -393,6 +393,7 @@
 			}
 			pathCoord.push(latLng);
 		}
+		t.totalPath = pathCoord;
 		t.splinePath = bspline(lats,lngs);
 
 		if (t.posMarker)
@@ -414,7 +415,7 @@
 		cp.setMap(t.map);
 
 		t.currentPos = 0;
-
+		t.splitPos = 0;
 		t.plotSingle();
 /*
 		var flightPath = t.currentPoly = new google.maps.Polyline({
@@ -425,7 +426,7 @@
 			strokeWeight: 8
 		});
 */
-		var totLength = google.maps.geometry.spherical.computeLength(flightPath.getPath().getArray());
+		var totLength = google.maps.geometry.spherical.computeLength(pathCoord);
 		console.log(totLength);
 		//flightPath.setMap(t.map);
 	}
@@ -435,14 +436,16 @@
 		var path = t.currentPaintPoly;
 		var cp = t.splinePath;
 		var pth = path.getPath();
-		var cdata = t.splinePath[t.currentPos];
-		pth.push(cdata);
-		console.log(t.posMarker);
 
-		t.posMarker.setPosition(cdata);
+		if (t.currentPos|4==0) {
 
+			var cdata = t.splinePath[t.splitPos++];
+			pth.push(cdata);
+			//t.result[t.currentPos];
+			t.posMarker.setPosition(cdata);
+		}
 		t.currentPos++;
-		if (t.currentPos<t.splinePath.length)
+		if (t.currentPos<t.totalPath.length)
 			setTimeout(function() { t.plotSingle(); },10);
 	}
 
