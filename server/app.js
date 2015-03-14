@@ -6,7 +6,8 @@ var layers = [
 	'karta',
 	'berg',
 	'vag',
-	'forn'
+	'forn',
+	'hojd'
 ];
 
 app.get('/1/layers', function (req, res) {

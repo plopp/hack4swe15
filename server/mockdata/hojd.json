@@ -1,0 +1,15 @@
+{
+	"id": "hojd",
+	"filename": "hojd.jpg",
+	"filetype": "image/jpeg",
+	"description": "Höjdskillnad",
+	"channels": [
+		{
+			"channel": 0,
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ -1.0, 1.0 ],
+			"name": "delta",
+			"unit": "%"
+		}
+	]
+}

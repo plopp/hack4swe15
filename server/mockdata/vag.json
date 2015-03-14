@@ -2,7 +2,7 @@
 	"id": "vag",
 	"filename": "vag.jpg",
 	"filetype": "image/jpeg",
-	"description": "Vägar, vit=ingen väg, svart=väg",
+	"description": "Framkomlighet, vit=ingen väg, svart=väg",
 	"channels": [
 		{
 			"channel": 0,
