@@ -452,7 +452,8 @@
 
 		t.currentPos = 0;
 		t.splitPos = 0;
-		t.stats = {};
+		var totLength = google.maps.geometry.spherical.computeLength(pathCoord);
+		t.stats = {totalDistance:totLength};
 		
 /*
 		var flightPath = t.currentPoly = new google.maps.Polyline({
@@ -463,18 +464,15 @@
 			strokeWeight: 8
 		});
 */
-		var totLength = google.maps.geometry.spherical.computeLength(pathCoord);
+		
 		console.log('Total längd',totLength);
-		t.personData = new persona.maskin();
-		for(var i in t.personData.keys) {
-			var k = t.personData.keys[i];
-			k.init(d.getElementById('tbldata'));
-		}
+		
+		t.setPersona();
 		t.plotSingle();
 		//flightPath.setMap(t.map);
 	}
 
-	pathFinder.prototype.calcData = function(currData) {
+	pathFinder.prototype.calcData = function(currData,percent) {
 		var t = this;
 		for(var i in currData) {
 			var cd = currData[i];
@@ -494,11 +492,14 @@
 				st.overThreshold =0;
 			if (!st.underThreshold)
 				st.underThreshold =0;
-			if (cd>t.layer[i].tresholdLower||0.1)
+			if (cd>t.layer[i].tresholdLow||0.1)
 				st.overThreshold++;
 			if (cd<t.layer[i].tresholdHigh||0.9)
 				st.underThreshold++;
 		}
+		
+		t.stats.distance = t.stats.totalDistance*percent;
+		
 		if (t.personData) {
 			for(var i in t.personData.keys) {
 				var k = t.personData.keys[i];
@@ -523,7 +524,7 @@
 			t.posMarker.setPosition(cdata);
 		//}
 		
-		t.calcData(data);
+		t.calcData(data,t.currentPos/t.absolutePath.length);
 
 		t.currentPos++;
 		if (t.plotTimer)
@@ -558,6 +559,23 @@
 		t.plotPath(t.result);
 	}
 
+	pathFinder.prototype.setPersona = function() {
+		var t = this;
+		var pers = t.personData = new persona[t.currentPersona]();
+		for(var i in pers.params)
+		{
+			var val = pers.params[i];
+			d.getElementById('prm_'+i).value = val;
+			t.layerMultiplier[i] = val;
+		}
+		var elm = d.getElementById('tbldata');
+		elm.innerHTML = '';
+		for(var i in pers.keys) {
+			var k = pers.keys[i];
+			k.init(elm);
+		}
+	}
+
 	pathFinder.prototype.setEnd = function(pos) {
 		console.log('set end',pos);
 		var t = this;
@@ -579,16 +597,12 @@
 
 	var tmpLayers = ['layer1'];
 
-
-	var persona = {
-		maskin:function() {
-			this.params = {"backar":"-6","berg":"-13","forn":1,"hojd":1,"osamjord":1,"skog":1,"urberg":1,"vag":"-7","vatten":1},
-			this.keys = [{
+	var defaultKeys = [{
 				init:function(prt) {
 					var t = this;
 					t.tr = addElm('tr');
 					t.td = addElm('td');
-					t.td.innerHTML = 'Höjd:';
+					t.td.innerHTML = 'Höjd (diff/medel)';
 					t.vl = addElm('td');
 					t.tr.appendChild(t.td);
 					t.tr.appendChild(t.vl);
@@ -596,16 +610,105 @@
 				},
 				update:function(st) {
 					var t = this;
-					t.vl.innerHTML = st['berg'].diff;
+					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
 				}
-			}]
+			}];
+
+	var persona = {
+		custom:function() {
+			this.title = 'Egen';
+			this.params = {"backar":"-6","berg":"-13","forn":1,"hojd":1,"osamjord":1,"skog":1,"urberg":1,"vag":"-7","vatten":1},
+			this.keys = defaultKeys;
+		},
+		skogsmulle:function() {
+			this.title = 'Skogsmulle';
+			this.params = {"backar":"-6","berg":"2","forn":40,"hojd":1,"osamjord":1,"skog":10,"urberg":5,"vag":"-20","vatten":1},
+			this.keys = defaultKeys.concat([{
+				init:function(prt) {
+					var t = this;
+					t.tr = addElm('tr');
+					t.td = addElm('td');
+					t.td.innerHTML = 'Höjd (diff/medel)';
+					t.vl = addElm('td');
+					t.tr.appendChild(t.td);
+					t.tr.appendChild(t.vl);
+					prt.appendChild(t.tr);
+				},
+				update:function(st) {
+					var t = this;
+					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+				}
+			},{
+				init:function(prt) {
+					var t = this;
+					t.tr = addElm('tr');
+					t.td = addElm('td');
+					t.td.innerHTML = 'Liter diesel';
+					t.vl = addElm('td');
+					t.tr.appendChild(t.td);
+					t.tr.appendChild(t.vl);
+					prt.appendChild(t.tr);
+				},
+				update:function(st) {
+					var t = this;
+					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+				}
+			}]);
+		},
+		maskin:function() {
+			this.title = 'Skogsmaskin';
+			this.params = {"backar":"-6","berg":"-13","forn":1,"hojd":1,"osamjord":1,"skog":1,"urberg":1,"vag":"-7","vatten":1},
+			this.keys = defaultKeys.concat([{
+				init:function(prt) {
+					var t = this;
+					t.tr = addElm('tr');
+					t.td = addElm('td');
+					t.td.innerHTML = 'Höjd (diff/medel)';
+					t.vl = addElm('td');
+					t.tr.appendChild(t.td);
+					t.tr.appendChild(t.vl);
+					prt.appendChild(t.tr);
+				},
+				update:function(st) {
+					var t = this;
+					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+				}
+			},{
+				init:function(prt) {
+					var t = this;
+					t.tr = addElm('tr');
+					t.td = addElm('td');
+					t.td.innerHTML = 'Liter diesel';
+					t.vl = addElm('td');
+					t.tr.appendChild(t.td);
+					t.tr.appendChild(t.vl);
+					prt.appendChild(t.tr);
+				},
+				update:function(st) {
+					var t = this;
+					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+				}
+			}]);
 		}
 	}
 
-
+	
 	w.initSearch = function(map,changeCallbak) {
 		
+		var personaSelect = d.getElementById('persona');
+		personaSelect.addEventListener('change',function() {
+			finder.currentPersona = this.value;
+			finder.setPersona();
+			finder.findPath();
+		});
+		for(var i in persona) {
+			var p = new persona[i]();
+			var elm = addElm('option',{value:i});
+			elm.innerHTML = p.title;
+			personaSelect.appendChild(elm);
+		}
 
+		finder.currentPersona = 'custom';
 
 		finder.init(map,changeCallbak);
 		jsonGet('/1/layers',function(d) {
