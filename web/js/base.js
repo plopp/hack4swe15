@@ -72,8 +72,8 @@
 		cnt.style.zIndex = '500';
 		cnt.appendChild(cvs);
 		// Bounds for pathfinder
-		var sw = new google.maps.LatLng(60.627800,15.660929);
-		var ne = new google.maps.LatLng(60.645859,15.724571);
+		var sw = new google.maps.LatLng( 60.619197236209565, 15.63852310180664 );
+		var ne = new google.maps.LatLng( 60.654928439140036, 15.746583938598633 );
 		var bounds = new google.maps.LatLngBounds(sw,ne);
 		
 		this.overlay = new SimulatorOverlay(bounds, cnt, this.map, this, function(){
