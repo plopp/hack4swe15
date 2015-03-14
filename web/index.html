@@ -172,10 +172,11 @@
 						var graph = new Graph(data);
 						startx = 0;
 						starty = 0;
-						endx = 511;
-						endy = 511;
-						var start = graph.grid[startx][starty];
-						var end = graph.grid[endx][endy];
+						endx = 299;
+						endy = 149;
+
+						var start = graph.grid[starty][startx];
+						var end = graph.grid[endy][endx];
 
 						var ctx = canvasElement.getContext("2d");
 						//ctx.fillStyle = "#FF0000";
@@ -189,6 +190,7 @@
 						
 						ctx.moveTo(startx,starty);
 						var result = astar.search(graph, start, end);
+						console.log(result);
 						for (var i = 0; i < result.length; i++) {
 							var x = result[i].x;
 							var y = result[i].y;
