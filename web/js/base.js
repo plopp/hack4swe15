@@ -28,7 +28,7 @@
 	pathFinder.prototype.init = function(map,cb) {
 		var t = this;
 		t.canvas = addElm('canvas');
-		t.initCallback = cb;
+		t.changeCallback = cb;
 		t.ctx = t.canvas.getContext('2d');
 		t.layerMultiplier = {};
 		t.layer = {};
@@ -71,7 +71,7 @@
 					console.log('change',this.value);
 					t.layerMultiplier[i] = this.value;
 					t.mergeLayers();
-					t.changeCallbak();
+					t.changeCallback && t.changeCallback();
 				},false);
 				t.layerMultiplier[i] = 1;
 				prt.appendChild(inp);
@@ -82,9 +82,19 @@
 
 	pathFinder.prototype.getLayers = function(layers) {
 		var t = this;
+
+		var N = layers.length;
+
 		layers.forEach(function(i,v) {
 			console.log(i,v);
-			t.loadMap(i.data);
+			t.loadMap(i.data, function() {
+				N --;
+				if (N == 0) {
+					console.log('all loaded.');
+					t.mergeLayers();
+					t.changeCallback && t.changeCallback();
+				}
+			});
 		});
 	}
 
@@ -135,7 +145,7 @@
 	}
 
 
-	pathFinder.prototype.gotLayer = function(data) {
+	pathFinder.prototype.gotLayer = function(data, cb) {
 		var t = this;
 		console.log('gotLayer',data);
 		if (data.channels) {
@@ -147,9 +157,12 @@
 				console.log('loaded');
 				var d = data.imageData = imageData.data;
 				mapValuesInLayer(data);
+				cb();
 			};
 			img.src = data.image;
 			t.repaintParams();
+		} else {
+			cb();
 		}
 	}
 
@@ -232,7 +245,7 @@
 	pathFinder.prototype.loadMap = function(layer,cb) {
 		var t = this;
 		jsonGet(layer,function(d) {
-			t.gotLayer(d);
+			t.gotLayer(d, cb);
 		});
 	}
 
