@@ -113,7 +113,7 @@
 
 <script type="text/javascript">
 		window.addEventListener('load', function() {
-		var myOptions = {
+			var myOptions = {
 				disableDefaultUI: true,
 				zoom:12,
 				center:centerlatlng,
@@ -122,13 +122,11 @@
 				styles:layerStyle[0],
 				scaleControl:false
 			};
-		var map = new google.maps.Map(document.getElementById("map"),myOptions);
+			var map = new google.maps.Map(document.getElementById("map"),myOptions);
+			window.initSearch(map);
+		});
 		
-		});
-		google.maps.event.addListenerOnce(map,"projection_changed", function() {
-				projection = map.getProjection();
-				console.log('change',projection);
-		});
+
 			</script>	
 </body>
 </html>
