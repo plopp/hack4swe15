@@ -12,6 +12,17 @@ body {
 	bottom:0;
 }
 
+#params {
+	position: absolute;
+	width:200px;
+	height:400px;
+	z-index: 200;
+	background-color: #fff;
+	padding:20px;
+	right:20px;
+	top:20px;	
+}
+
 .guidiv{
 	position:absolute;
 	width:100px;height:30px;
