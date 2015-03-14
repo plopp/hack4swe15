@@ -1,15 +1,15 @@
 {
-	"id": "berg",
-	"filename": "berg.jpg",
+	"id": "backar",
+	"filename": "backar.jpg",
 	"filetype": "image/jpeg",
-	"description": "Bergart",
+	"description": "Bäckar",
 	"channels": [
 		{
 			"channel": 0,
 			"inputrange": [ 0, 255 ],
 			"outputrange": [ 0.0, 1.0 ],
 			"name": "",
-			"unit": "%"
+			"unit": ""
 		}
 	]
 }

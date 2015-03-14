@@ -3,11 +3,16 @@ var express = require('express');
 var app = express();
 
 var layers = [
-	'karta',
+	'backar',
 	'berg',
-	'vag',
 	'forn',
-	'hojd'
+	'hojd',
+	// 'karta',
+	'osamjord',
+	'skog',
+	'urberg',
+	'vag',
+	'vatten'
 ];
 
 app.get('/1/layers', function (req, res) {

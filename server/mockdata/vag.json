@@ -2,13 +2,13 @@
 	"id": "vag",
 	"filename": "vag.jpg",
 	"filetype": "image/jpeg",
-	"description": "Framkomlighet, vit=ingen väg, svart=väg",
+	"description": "Vägar",
 	"channels": [
 		{
 			"channel": 0,
 			"inputrange": [ 0, 255 ],
 			"outputrange": [ 1.0, -1.0 ],
-			"name": "Väg",
+			"name": "",
 			"unit": "%"
 		}
 	]

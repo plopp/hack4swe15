@@ -1,8 +1,8 @@
 {
-	"id": "berg",
-	"filename": "berg.jpg",
+	"id": "skog",
+	"filename": "skog.jpg",
 	"filetype": "image/jpeg",
-	"description": "Bergart",
+	"description": "Skog",
 	"channels": [
 		{
 			"channel": 0,

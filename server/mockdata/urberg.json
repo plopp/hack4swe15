@@ -1,8 +1,8 @@
 {
-	"id": "berg",
-	"filename": "berg.jpg",
+	"id": "urberg",
+	"filename": "urberg.jpg",
 	"filetype": "image/jpeg",
-	"description": "Bergart",
+	"description": "Urberg",
 	"channels": [
 		{
 			"channel": 0,
