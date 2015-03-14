@@ -3,13 +3,13 @@ SimulatorOverlay.prototype = new google.maps.OverlayView();
 // Initialize the map and the custom overlay.
 
 /** @constructor */
-function SimulatorOverlay(bn, elm, map,cb,sim) {
+function SimulatorOverlay(bn, elm, map,cb/*,sim*/) {
   this.bounds_ = bn;
   this.myb = bn;
   this._elm = elm;
   this.map_ = map;
   this._cb = cb;
-  this._sim = sim;
+  //this._sim = sim;
   this.div_ = null;
   this.setMap(map);
 }
@@ -35,7 +35,7 @@ SimulatorOverlay.prototype.onAdd = function() {
     var oelm = t._elm;
     var fx = (oelm.offsetWidth/1024);
     var fy = (oelm.offsetHeight/768);
-    t._sim.emitAtPoint((pos.x-t._elm.offsetLeft)/fx,(pos.y-t._elm.offsetTop)/fy);
+    //t._sim.emitAtPoint((pos.x-t._elm.offsetLeft)/fx,(pos.y-t._elm.offsetTop)/fy);
   });
 
   google.maps.event.addListener(this.map_, 'mousemove', function(e) {
@@ -45,7 +45,7 @@ SimulatorOverlay.prototype.onAdd = function() {
     var oelm = t._elm;
     var fx = (oelm.offsetWidth/1024);
     var fy = (oelm.offsetHeight/768);
-    t._sim.updateMousePosition((pos.x-t._elm.offsetLeft)/fx,(pos.y-t._elm.offsetTop)/fy);
+    //t._sim.updateMousePosition((pos.x-t._elm.offsetLeft)/fx,(pos.y-t._elm.offsetTop)/fy);
   });
 
   panes.overlayLayer.appendChild(this._elm);

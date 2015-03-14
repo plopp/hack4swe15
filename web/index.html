@@ -4,6 +4,7 @@
 	<link rel="stylesheet" href="css/style.css" />
 	<script type="text/javascript" src="js/base.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	<script type='text/javascript' src='js/overlaycanvas.js'></script>
 	<script type='text/javascript' src='js/astar.js'></script>
 </head>
 <body>
@@ -101,11 +102,6 @@
 	    ]
 	  }
 	]];
-	var centerlatlng = new google.maps.LatLng(63.3115296,18.757557);
-		var lat1 = 63.25225601350672;
-		var lat2 = 63.37068145529103;
-		var lng1 = 18.58177575000002;
-		var lng2 = 18.93333825000002;
 	</script>
 		<div id="map"></div>
 		<div id="overlay"></div>
@@ -114,24 +110,85 @@
 
 		<script type="text/javascript">
 				window.addEventListener('load', function() {
+					var butts =document.getElementsByTagName("button");
+					for(var z =0; z < butts.length; z++){
+						var elem = butts[z];
+						//console.log(elem);
+						elem.onclick = function(event){
+							var id = event.toElement.id;
+							switch(id){
+								case "setStart":
+									console.log("Start");
+									break;
+								case "setEnd":
+									console.log("End");
+									break;
+							}
+						}
+					}
+
+					var centerlatlng = new google.maps.LatLng(60.627800,15.660929);
+
 					var myOptions = {
 						disableDefaultUI: true,
-						zoom:12,
+						zoom:14,
 						center:centerlatlng,
-						mapTypeId:google.maps.MapTypeId.TERRAIN,
+						mapTypeId:google.maps.MapTypeId.SATELLITE,
 						draggableCursor:'crosshair',
-						styles:layerStyle[0],
+						//styles:layerStyle[0],
 						scaleControl:false
 					};
 
+					var map = new google.maps.Map(document.getElementById("map"),myOptions);
+
+					var canvasElement = document.createElement('canvas');
+					canvasElement.style.width = '100%';
+					canvasElement.style.height = '100%';
+
+					var cntDiv = document.createElement('div');
+					cntDiv.style.position = 'absolute';
+					cntDiv.style.width = '100%';
+					cntDiv.style.height = '100%';
+					cntDiv.appendChild(canvasElement);
+
+					var sw = new google.maps.LatLng(60.627800,15.660929);
+					var ne = new google.maps.LatLng(60.645859,15.724571);
+					var bn = new google.maps.LatLngBounds(sw,ne);
+
+					overlay = new SimulatorOverlay(bn, cntDiv, map,function(){
+						console.log("Added overlay");
+					}/*,sim*/);
+
 					var prepareSeach = function(data){
 						var graph = new Graph(data);
-						var start = graph.grid[0][0];
-						var end = graph.grid[1][2];
+						startx = 0;
+						starty = 0;
+						endx = 511;
+						endy = 511;
+						var start = graph.grid[startx][starty];
+						var end = graph.grid[endx][endy];
+
+						var ctx = canvasElement.getContext("2d");
+						//ctx.fillStyle = "#FF0000";
+						//ctx.strokeStyle = "#FF0000";
+						ctx.rect(0,0,canvasElement.width,canvasElement.height);
+						console.log("Area size: "+canvasElement.width+"px "+canvasElement.height+"px");
+						ctx.stroke();
+						
+						ctx.beginPath();
+						ctx.strokeStyle = 'blue';
+						
+						ctx.moveTo(startx,starty);
 						var result = astar.search(graph, start, end);
+						for (var i = 0; i < result.length; i++) {
+							var x = result[i].x;
+							var y = result[i].y;
+							ctx.lineTo(x,y);
+							ctx.moveTo(x,y);
+						};	
+						ctx.stroke();
 					}
 
-					var map = new google.maps.Map(document.getElementById("map"),myOptions);
 					finder = window.initSearch(map);
 					finder.getMergedArray(prepareSeach);
 
@@ -140,8 +197,8 @@
 				
 		</script>	
 		<div class="guidiv">
-			<button>Set start point</button>
-			<button>Set end point</button>
+			<button id="setStart">Set start point</button>
+			<button id="setEnd">Set end point</button>
 		</div>
 </body>
 </html>
