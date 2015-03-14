@@ -6,6 +6,7 @@ var layers = [
 	'backar',
 	'berg',
 	'forn',
+	'forndist',
 	'hojd',
 	'karta',
 	'osamjord',
