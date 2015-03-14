@@ -1,0 +1,15 @@
+{
+	"id": "vag",
+	"filename": "vag.jpg",
+	"filetype": "image/jpeg",
+	"description": "Vägar, vit=ingen väg, svart=väg",
+	"channels": [
+		{
+			"channel": 0,
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ 1.0, 0.0 ],
+			"name": "Väg",
+			"unit": "%"
+		}
+	]
+}

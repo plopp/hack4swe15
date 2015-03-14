@@ -1,0 +1,15 @@
+{
+	"id": "berg",
+	"filename": "berg.jpg",
+	"filetype": "image/jpeg",
+	"description": "Bergart / hållfastighet",
+	"channels": [
+		{
+			"channel": 0,
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ 0.5, 1.1 ],
+			"name": "hållfastighet",
+			"unit": "%"
+		}
+	]
+}

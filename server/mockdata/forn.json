@@ -1,0 +1,14 @@
+{
+	"id": "forn",
+	"filename": "forn.gif",
+	"filetype": "image/gif",
+	"description": "Fornlänningar",
+	"channels": [
+		{
+			"channel": 0,
+			"map": {
+				"255": "Fornlämning, akta!"
+			}
+		}
+	]
+}
