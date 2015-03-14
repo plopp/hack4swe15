@@ -28,6 +28,8 @@
 	pathFinder.prototype.init = function(map,cb) {
 		var t = this;
 		t.canvas = addElm('canvas');
+		t.canvas.width = size.width;
+		t.canvas.height = size.height;
 		t.changeCallback = cb;
 		t.ctx = t.canvas.getContext('2d');
 		t.layerMultiplier = {};
@@ -66,7 +68,7 @@
 				var lbl = addElm('label',{'for':'prm_'+i});
 				lbl.innerHTML = t.layer[i].description;
 				prt.appendChild(lbl);
-				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-4,max:4,value:1});
+				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-20,max:20,value:1});
 				inp.addEventListener('change',function() {
 					console.log('change',this.value);
 					t.layerMultiplier[i] = this.value;
@@ -135,7 +137,6 @@
 
 			for(var i=0; i<imgdatapixels.length; i+=4) {
 				var val = imgdatapixels[i + ch.channel];
-				val += Math.random() * 2.0 - 1.0;
 				absoluteValues.push((clamp((val - layerDefinition.inmin) / indiff) * outdiff) + layerDefinition.outmin);
 			}
 
@@ -182,7 +183,7 @@
 					var lay = t.layer[i];
 					if (lay.absoluteValues) {
 						if (x == 10 && y == 10) console.log(lay ,t );
-						tot += lay.absoluteValues[y * size.width + x] * (t.layerMultiplier[i] + 0.001);
+						tot += lay.absoluteValues[y * size.width + x] * (t.layerMultiplier[i] + 0.01);
 					}
 				}
 				thisLine.push(tot);
@@ -205,7 +206,7 @@
 		for(var y=0;y<size.height;y++) {
 			for(var x=0;x<size.width;x++) {
 				var vl = data[y][x];
-				vl = 128 + vl * 50;
+				vl = 128 + vl * 1;
 				if (vl < 0) vl = 0;
 				if (vl > 255) vl = 255;
 				ret.data[o] = vl;
@@ -227,8 +228,8 @@
 		var img = addElm('img');
 		ctx.putImageData(this.createRGBA(ctx,this.outData),0,0);
 		img.src = canvas.toDataURL();
-		this.obj.debug.innerHTML = '';
-		this.obj.debug.appendChild(canvas);
+		// this.obj.debug.innerHTML = '';
+		// this.obj.debug.appendChild(canvas);
 	}
 
 	pathFinder.prototype.getMergedArray = function(cb) {
@@ -269,7 +270,7 @@
 		console.log(e.latLng);
 	}
 
-	var size = { width: 300, height: 150 };
+	var size = { width: 1000, height: 500 };
 
 	var finder = new pathFinder();
 

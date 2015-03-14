@@ -275,7 +275,7 @@ GridNode.prototype.getCost = function(fromNeighbor) {
 };
 
 GridNode.prototype.isWall = function() {
-    return this.weight === 0;
+    return false; // this.weight === 0;
 };
 
 function BinaryHeap(scoreFunction){

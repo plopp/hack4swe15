@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="js/base.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 	<script type='text/javascript' src='js/overlaycanvas.js'></script>
+	<script type='text/javascript' src='bower_components/pathfinding/pathfinding-browser.js'></script>
 	<script type='text/javascript' src='js/astar.js'></script>
 </head>
 <body>
@@ -176,6 +177,8 @@
 				  	});
 
 					var canvasElement = document.createElement('canvas');
+					canvasElement.width = '1000';
+					canvasElement.height = '500';
 					canvasElement.style.width = '100%';
 					canvasElement.style.height = '100%';
 
@@ -194,17 +197,31 @@
 					}/*,sim*/);
 
 					var prepareSearch = function(data) {
-						console.log('prepareSearch', data);
-						startx = 0;
-						starty = 0;
-						endx = 299;
-						endy = 149;
+						// console.log('prepareSearch', data);
+						startx = 40;
+						starty = 40;
+						endx = data[0].length - 40;
+						endy = data.length - 40;
 						if(startx == 0 && starty == 0 && endx == 0 && endy == 0){
 							return;
 						}
-						var graph = new Graph(data, { diagonal: true });
-						var start = graph.grid[starty][startx];
-						var end = graph.grid[endy][endx];
+
+						var grid = new PF.Grid(data[0].length, data.length, data);
+						for(var j=0; j<data.length-1; j++) {
+							for(var i=0; i<data[0].length-1; i++) {
+								grid.setWalkableAt(i, j, true);
+								grid.setWeightAt(i, j, data[j][i]);
+							}
+						}
+						var pathfinder = new PF.AStarFinder({
+							heuristic: PF.Heuristic.euclidean
+						});
+						var result = pathfinder.findPath(startx, starty, endx, endy, grid);
+						console.log('result', result);
+
+						// // var graph = new Graph(data, { diagonal: false });
+						// var start = graph.grid[starty][startx];
+						// var end = graph.grid[endy][endx];
 
 						var ctx = canvasElement.getContext("2d");
 						ctx.clearRect(0,0,canvasElement.width,canvasElement.height);
@@ -219,14 +236,20 @@
 						ctx.stroke();
 
 						ctx.beginPath();
-						ctx.strokeStyle = 'blue';
-						ctx.moveTo(startx,starty);
-						var result = astar.search(graph, start, end);
+						// var result = astar.search(graph, start, end);
 						for (var i = 0; i < result.length; i++) {
-							var x = result[i].y;
-							var y = result[i].x;
+							var x = result[i][0];
+							var y = result[i][1];
+							/* if (result[i].closed) {
+								ctx.strokeStyle = 'green';
+								ctx.lineTo(x,y);
+								ctx.moveTo(x,y);
+							} else {
+							*/
+							ctx.strokeStyle = 'blue';
 							ctx.lineTo(x,y);
 							ctx.moveTo(x,y);
+							// }
 						};
 						ctx.stroke();
 					}
