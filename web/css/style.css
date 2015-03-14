@@ -14,13 +14,28 @@ body {
 
 #params {
 	position: absolute;
-	width:200px;
-	height:400px;
+	width:350px;
 	z-index: 200;
 	background-color: #fff;
-	padding:20px;
+	padding:20px 20px 0 20px;
 	right:20px;
-	top:20px;	
+	top:20px;
+	box-sizing: border-box;
+}
+
+#params li {
+	list-style: none;
+	margin: 0;
+	box-sizing: border-box;
+	padding: 0 0 20px 0;
+}
+
+#params li input[type=range] {
+	display: block;
+	clear: both;
+	box-sizing: border-box;
+	padding-left: 40px;
+	width: 100%;
 }
 
 .guidiv{

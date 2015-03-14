@@ -33,6 +33,7 @@
 		t.changeCallback = cb;
 		t.ctx = t.canvas.getContext('2d');
 		t.layerMultiplier = {};
+		t.layerEnabled = {};
 		t.layer = {};
 		t.obj = {
 			debug: d.getElementById('debug'),
@@ -65,17 +66,25 @@
 			(function(i) {
 				console.log(i,t.layer);
 				var prt = addElm('li');
-				var lbl = addElm('label',{'for':'prm_'+i});
-				lbl.innerHTML = t.layer[i].description;
-				prt.appendChild(lbl);
+				var lbl = addElm('label',{'for':'prc_'+i});
+				var inp2 = addElm('input',{'id':'prc_'+i,'type':'checkbox',checked:1});
 				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-20,max:20,value:1});
 				inp.addEventListener('change',function() {
-					console.log('change',this.value);
 					t.layerMultiplier[i] = this.value;
 					t.mergeLayers();
 					t.changeCallback && t.changeCallback();
 				},false);
+				inp.addEventListener('change',function() {
+					t.layerEnabled[i] = this.checked;
+					t.mergeLayers();
+					t.changeCallback && t.changeCallback();
+				},false);
 				t.layerMultiplier[i] = 1;
+				t.layerEnabled[i] = 1;
+				prt.appendChild(inp2);
+				prt.appendChild(lbl);
+				lbl.innerHTML = t.layer[i].description;
+				prt.text = t.layer[i].description;
 				prt.appendChild(inp);
 				t.obj.params.appendChild(prt);
 			})(j);
@@ -93,6 +102,15 @@
 				N --;
 				if (N == 0) {
 					console.log('all loaded.');
+
+					layers.sort(function(a,b) {
+						if (a.id < b.id)
+							return -1;
+						if (a.id > b.id)
+							return 1;
+						return 0;
+					});
+
 					t.mergeLayers();
 					t.changeCallback && t.changeCallback();
 				}
