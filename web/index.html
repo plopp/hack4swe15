@@ -176,11 +176,6 @@
 				    	console.log(event.pixel);
 				  	});
 
-				  	google.maps.event.addListenerOnce(map,"projection_changed", function() {
-						projection = map.getProjection();
-
-						console.log('prjection change',projection);
-					});
 
 					var canvasElement = document.createElement('canvas');
 					canvasElement.width = '1000';

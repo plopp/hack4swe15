@@ -275,7 +275,7 @@
 
 	}
 
-	pathFinder.prototype.endStart = function() {
+	pathFinder.prototype.setEnd = function() {
 		
 	}
 

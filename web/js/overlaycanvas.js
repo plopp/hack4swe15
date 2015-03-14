@@ -3,14 +3,15 @@ SimulatorOverlay.prototype = new google.maps.OverlayView();
 // Initialize the map and the custom overlay.
 
 /** @constructor */
-function SimulatorOverlay(bn, elm, map,cb/*,sim*/) {
+function SimulatorOverlay(bn, elm, map,finder,cb) {
   this.bounds_ = bn;
   this.myb = bn;
   this._elm = elm;
   this.map_ = map;
   this._cb = cb;
-  //this._sim = sim;
+  this._finder = finder;
   this.div_ = null;
+  this.startPosition = true;
   this.setMap(map);
 }
 
@@ -31,23 +32,23 @@ SimulatorOverlay.prototype.onAdd = function() {
   google.maps.event.addListener(this.map_, 'click', function(e) {
     var ll = e.latLng;
     var pos = overlayProjection.fromLatLngToDivPixel(ll);
-    //console.log(ll,pos);
     var oelm = t._elm;
-    var fx = (oelm.offsetWidth/1024);
-    var fy = (oelm.offsetHeight/768);
-    //t._sim.emitAtPoint((pos.x-t._elm.offsetLeft)/fx,(pos.y-t._elm.offsetTop)/fy);
+    //var fx = (oelm.offsetWidth/1024);
+    //var fy = (oelm.offsetHeight/768);
+    this._finder[this.startPosition?'setStart':'setEnd'](e,pos,ll);
+    this.startPosition = !this.startPosition;
   });
-
+/*
   google.maps.event.addListener(this.map_, 'mousemove', function(e) {
     var ll = e.latLng;
     var pos = overlayProjection.fromLatLngToDivPixel(ll);
     // console.log('mousemove',ll,pos);
     var oelm = t._elm;
-    var fx = (oelm.offsetWidth/1024);
-    var fy = (oelm.offsetHeight/768);
+    //var fx = (oelm.offsetWidth/1024);
+    //var fy = (oelm.offsetHeight/768);
     //t._sim.updateMousePosition((pos.x-t._elm.offsetLeft)/fx,(pos.y-t._elm.offsetTop)/fy);
   });
-
+*/
   panes.overlayLayer.appendChild(this._elm);
 };
 
