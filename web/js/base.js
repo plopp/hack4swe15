@@ -649,7 +649,7 @@
 	var persona = {
 		custom:function() {
 			this.title = 'Egen';
-			this.params = {"backar":"-6","berg":"-13","forn":1,"hojd":1,"osamjord":1,"skog":1,"urberg":1,"vag":"-7","vatten":1},
+			this.params = {"backar":"-1","berg":"-1","forn":-1,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":-1,"vag":"-1","vatten":-1},
 			this.keys = defaultKeys;
 		},
 		skogsmulle:function() {
