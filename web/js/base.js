@@ -135,6 +135,7 @@
 
 			for(var i=0; i<imgdatapixels.length; i+=4) {
 				var val = imgdatapixels[i + ch.channel];
+				val += Math.random() * 2.0 - 1.0;
 				absoluteValues.push((clamp((val - layerDefinition.inmin) / indiff) * outdiff) + layerDefinition.outmin);
 			}
 
@@ -144,6 +145,9 @@
 		// console.log('map values output', layerDefinition.absoluteValues);
 	}
 
+	pathFinder.prototype.drawDebug = function(ctx) {
+		ctx.putImageData(this.createRGBA(ctx,this.outData),0,0);
+	}
 
 	pathFinder.prototype.gotLayer = function(data, cb) {
 		var t = this;
@@ -178,7 +182,7 @@
 					var lay = t.layer[i];
 					if (lay.absoluteValues) {
 						if (x == 10 && y == 10) console.log(lay ,t );
-						tot += lay.absoluteValues[y * size.width + x] * t.layerMultiplier[i];
+						tot += lay.absoluteValues[y * size.width + x] * (t.layerMultiplier[i] + 0.001);
 					}
 				}
 				thisLine.push(tot);

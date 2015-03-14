@@ -193,7 +193,8 @@
 						console.log("Added overlay");
 					}/*,sim*/);
 
-					var prepareSearch = function(data){
+					var prepareSearch = function(data) {
+						console.log('prepareSearch', data);
 						startx = 0;
 						starty = 0;
 						endx = 299;
@@ -201,31 +202,32 @@
 						if(startx == 0 && starty == 0 && endx == 0 && endy == 0){
 							return;
 						}
-						var graph = new Graph(data);
-						
+						var graph = new Graph(data, { diagonal: true });
 						var start = graph.grid[starty][startx];
 						var end = graph.grid[endy][endx];
 
 						var ctx = canvasElement.getContext("2d");
-						//ctx.clearRect(0,0,canvasElement.width,canvasElement.height);
-						//ctx.fillStyle = "#FF0000";
-						//ctx.strokeStyle = "#FF0000";
+						ctx.clearRect(0,0,canvasElement.width,canvasElement.height);
+						ctx.fillStyle = "#FF0000";
+						ctx.strokeStyle = "#FF0000";
+
+						finder.drawDebug(ctx);
+
+						ctx.beginPath();
 						ctx.rect(0,0,canvasElement.width,canvasElement.height);
 						console.log("Area size: "+canvasElement.width+"px "+canvasElement.height+"px");
 						ctx.stroke();
-						
+
 						ctx.beginPath();
 						ctx.strokeStyle = 'blue';
-						
 						ctx.moveTo(startx,starty);
 						var result = astar.search(graph, start, end);
-						
 						for (var i = 0; i < result.length; i++) {
-							var x = result[i].x;
-							var y = result[i].y;
+							var x = result[i].y;
+							var y = result[i].x;
 							ctx.lineTo(x,y);
 							ctx.moveTo(x,y);
-						};	
+						};
 						ctx.stroke();
 					}
 
@@ -238,8 +240,8 @@
 
 					// result is an array containing the shortest path
 				});
-				
-		</script>	
+
+		</script>
 		<div class="guidiv">
 			<button id="setStart">Set start point</button>
 			<button id="setEnd">Set end point</button>
