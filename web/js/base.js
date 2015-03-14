@@ -313,6 +313,39 @@
 		console.log('set start',pos);
 	}
 
+	pathFinder.prototype.getLayerData = function(x,y) {
+		var t = this;
+		var ret = {};
+		for(var i in t.layer) {
+			var l = t.layer[i];
+			console.log(l,x,y);
+			ret[i] = l.values[y*t.size.width+x];
+		}
+		return ret;
+	}
+
+	function bspline(lats, lons) {
+	    var i, t, ax, ay, bx, by, cx, cy, dx, dy, lat, lon, points;
+	    points = [];
+	    // For every point
+	    for (i = 2; i < lats.length - 2; i++) {
+	        for (t = 0; t < 1; t += 0.2) {
+	            ax = (-lats[i - 2] + 3 * lats[i - 1] - 3 * lats[i] + lats[i + 1]) / 6;
+	            ay = (-lons[i - 2] + 3 * lons[i - 1] - 3 * lons[i] + lons[i + 1]) / 6;
+	            bx = (lats[i - 2] - 2 * lats[i - 1] + lats[i]) / 2;
+	            by = (lons[i - 2] - 2 * lons[i - 1] + lons[i]) / 2;
+	            cx = (-lats[i - 2] + lats[i]) / 2;
+	            cy = (-lons[i - 2] + lons[i]) / 2;
+	            dx = (lats[i - 2] + 4 * lats[i - 1] + lats[i]) / 6;
+	            dy = (lons[i - 2] + 4 * lons[i - 1] + lons[i]) / 6;
+	            lat = ax * Math.pow(t + 0.1, 3) + bx * Math.pow(t + 0.1, 2) + cx * (t + 0.1) + dx;
+	            lon = ay * Math.pow(t + 0.1, 3) + by * Math.pow(t + 0.1, 2) + cy * (t + 0.1) + dy;
+	            points.push(new google.maps.LatLng(lat, lon));
+	        }
+	    }
+	    return points;
+	}
+
 	pathFinder.prototype.plotPath = function(result) {
 		// Plot on map
 		console.log('got result',result);
@@ -347,24 +380,70 @@
 
 		var t = this;
 		var pathCoord = [];
+		var lats = [];
+		var lngs = [];
 		for (var i = 0; i < result.length; i++) {
 			var x = result[i][0];
 			var y = result[i][1];
 			//console.log(x,y,t.overlay);
 			var latLng = t.overlay.getPos(x,y);
+			if (i%4==1) {
+				lats.push(latLng.lat());
+				lngs.push(latLng.lng());
+			}
 			pathCoord.push(latLng);
 		}
-		if (t.currentPoly)
-			t.currentPoly.setMap(null);
+		t.splinePath = bspline(lats,lngs);
+
+		if (t.posMarker)
+			t.posMarker.setMap(null);
+		if (t.currentPaintPoly)
+			t.currentPaintPoly.setMap(null);
+		//if (t.currentPoly)
+			//t.currentPoly.setMap(null);
+
+		var p = t.posMarker = new google.maps.Marker({title:'Du',position:pathCoord[0]});
+		p.setMap(this.map);
+		
+		var cp = t.currentPaintPoly = new google.maps.Polyline({
+			geodesic: false,
+			strokeColor: '#ff00ff',
+			strokeOpacity: 0.8,
+			strokeWeight: 8
+		});
+		cp.setMap(t.map);
+
+		t.currentPos = 0;
+
+		t.plotSingle();
+/*
 		var flightPath = t.currentPoly = new google.maps.Polyline({
 			path: pathCoord,
-			geodesic: true,
-			strokeColor: '#FF0000',
-			strokeOpacity: 1.0,
-			strokeWeight: 2
+			geodesic: false,
+			strokeColor: '#ff00ff',
+			strokeOpacity: 0.8,
+			strokeWeight: 8
 		});
+*/
+		var totLength = google.maps.geometry.spherical.computeLength(flightPath.getPath().getArray());
+		console.log(totLength);
+		//flightPath.setMap(t.map);
+	}
 
-		flightPath.setMap(t.map);
+	pathFinder.prototype.plotSingle = function() {
+		var t = this;
+		var path = t.currentPaintPoly;
+		var cp = t.splinePath;
+		var pth = path.getPath();
+		var cdata = t.splinePath[t.currentPos];
+		pth.push(cdata);
+		console.log(t.posMarker);
+
+		t.posMarker.setPosition(cdata);
+
+		t.currentPos++;
+		if (t.currentPos<t.splinePath.length)
+			setTimeout(function() { t.plotSingle(); },10);
 	}
 
 	pathFinder.prototype.findPath = function() {
