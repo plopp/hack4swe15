@@ -56,15 +56,16 @@
 	pathFinder.prototype.repaintParams = function(data) {
 		var t = this;
 		console.log('hoho paint paramas');
+		t.obj.params.innerHTML = '';
 		for(var j in t.layer) {
 			(function(i) {
 				console.log(i,t.layer);
 				var prt = addElm('li'); 
 				
 				var lbl = addElm('label',{'for':'prm_'+i});
-				lbl.innerHTML = data.description;
+				lbl.innerHTML = t.layer[i].description;
 				prt.appendChild(lbl);
-				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-16,max:16,value:0});
+				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-16,max:16,value:1});
 				inp.addEventListener('change',function() {
 					console.log('change',this.value);
 					t.mergeValues[i] = this.value;
@@ -147,20 +148,22 @@
 	pathFinder.prototype.gotLayer = function(data) {
 		var t = this;
 		console.log(data);
-		t.layer[data.id||'1'] = data;
-		var img = new Image();
-		img.onload = function() {
-			t.ctx.drawImage(this,0,0, steps[0], steps[1]);
-			var imageData = t.ctx.getImageData(0, 0, steps[0], steps[1]);
-			console.log('loaded');
-			var d = data.imageData = imageData.data;
-			mapValues(data);
-			
-			console.log(d);
-        	t.mergeLayers();
-		};
-		img.src = data.image;
-		t.repaintParams();
+		if (data.channels) {
+			t.layer[data.id||'1'] = data;
+			var img = new Image();
+			img.onload = function() {
+				t.ctx.drawImage(this,0,0, steps[0], steps[1]);
+				var imageData = t.ctx.getImageData(0, 0, steps[0], steps[1]);
+				console.log('loaded');
+				var d = data.imageData = imageData.data;
+				mapValues(data);
+				
+				console.log(d);
+	        	//t.mergeLayers();
+			};
+			img.src = data.image;
+			t.repaintParams();
+		}
 	}
 
 	pathFinder.prototype.mergeLayers = function() {
@@ -174,8 +177,11 @@
 				var tot = 0;
 				for(var i in t.layer) {
 					var lay = t.layer[i];
-					var data = lay.values[0].data[y*steps[0]+x];
-					data = data*t.mergeValues[i];
+					var data = 0;
+					if (lay.values[0].data) {
+						data = lay.values[0].data[y*steps[0]+x];
+						data = data*t.mergeValues[i];
+					}
 					tot+=data;
 				}	
 				thisLine.push(tot);
@@ -228,7 +234,7 @@
 
 	pathFinder.prototype.loadMap = function(layer,cb) {
 		var t = this;
-		jsonGet('/1/'+layer+'.json',function(d) {
+		jsonGet(layer,function(d) {
 			t.gotLayer(d);
 		});
 	}
