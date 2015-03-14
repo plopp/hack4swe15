@@ -8,8 +8,9 @@
 			"channel": 0,
 			"inputrange": [ 0, 255 ],
 			"outputrange": [ 0.0, 1.0 ],
-			"name": "",
-			"unit": ""
+			"displayrange": [ 0.0, 15.0 ],
+			"name": "Djup",
+			"unit": "m"
 		}
 	]
 }
