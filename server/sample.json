@@ -1,0 +1,36 @@
+{
+	"image": "bitmap data url",
+	"region": {
+		"topleft": {
+			"lat": 0,
+			"lng": 0,
+		},
+		"bottomright": {
+			"lat": 0,
+			"lng": 0,
+		}
+	},
+	"channels": [
+		{
+			"channel": 0,
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ 0.0, 100.0 ],
+			"name": "elevation",
+			"unit": "m"
+		},
+		{
+			"channel": 1,
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ -50.0, 0.0 ],
+			"name": "x",
+			"unit": "m"
+		},
+		{
+			"channel": 2,
+			"map": {
+				"1": "fornlämning #4",
+				"5": "fornlämning #6"
+			}
+		}
+	]
+}
