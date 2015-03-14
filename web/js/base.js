@@ -92,9 +92,10 @@
 	}
 
 	pathFinder.prototype.mergeLayers = function() {
+		var t = this;
 		for(var i in t.layers) {
 			console.log(i,v);
-		});
+		}
 	}
 
 	pathFinder.prototype.getMergedArray = function(cb) {
