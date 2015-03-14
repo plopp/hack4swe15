@@ -7,8 +7,8 @@
 		{
 			"channel": 0,
 			"inputrange": [ 0, 255 ],
-			"outputrange": [ -1, 1 ],
-			"displayrange": [ 118.01, 304.61 ],
+			"outputrange": [ 0, 1 ],
+			"displayrange": [ 118.21, 304.61 ],
 			"name": "Höjd",
 			"unit": "m"
 		}

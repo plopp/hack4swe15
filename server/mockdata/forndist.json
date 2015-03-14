@@ -1,8 +1,8 @@
 {
-	"id": "forn",
-	"filename": "forn.gif",
-	"filetype": "image/gif",
-	"description": "Fornlämningar",
+	"id": "forndist",
+	"filename": "forndist.jpg",
+	"filetype": "image/jpeg",
+	"description": "Fornlämningar dragningskraft",
 	"channels": [
 		{
 			"channel": 0,
