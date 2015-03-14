@@ -485,9 +485,21 @@
 			if (!st.diff)
 				st.diff = 0;
 			st.diff+=(st.lastVal-cd); 
+			
+			if (!st.totalInc)
+				st.totalInc = 0;
+			if (st.lastVal<cd) {
+				st.totalInc+=st.lastVal-cd;
+			}
+			if (!st.totalDec)
+				st.totalDec = 0;
+			if (st.lastVal>cd) {
+				st.totalDec-=st.lastVal-cd;
+			}
 			st.lastVal = cd;
 			st.total = (t.stats[i].total||0)+cd;
 			st.med = st.total/st.noi;
+
 			if (!st.overThreshold)
 				st.overThreshold =0;
 			if (!st.underThreshold)
@@ -597,23 +609,36 @@
 
 	var tmpLayers = ['layer1'];
 
+	function createElms(prt,title) {
+		var tr = addElm('tr');
+		var td = addElm('td');
+		td.innerHTML = title;
+		var vl = addElm('td');
+		tr.appendChild(td);
+		tr.appendChild(vl);
+		prt.appendChild(tr);
+		return vl;
+	}
+
+
 	var defaultKeys = [{
 				init:function(prt) {
 					var t = this;
-					t.tr = addElm('tr');
-					t.td = addElm('td');
-					t.td.innerHTML = 'Höjd (diff/medel)';
-					t.vl = addElm('td');
-					t.tr.appendChild(t.td);
-					t.tr.appendChild(t.vl);
-					prt.appendChild(t.tr);
+					t.dist = createElms(prt,'Distans:');
 				},
 				update:function(st) {
 					var t = this;
-					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+					var unit = ' m';
+					var dist = Math.round(st.distance);
+					if (dist>4000) {
+						dist = Math.round(dist/100)/10;
+						unit = ' km';
+					}
+					t.dist.innerHTML = dist+unit;
 				}
 			}];
 
+	
 	var persona = {
 		custom:function() {
 			this.title = 'Egen';
@@ -626,32 +651,11 @@
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
-					t.tr = addElm('tr');
-					t.td = addElm('td');
-					t.td.innerHTML = 'Höjd (diff/medel)';
-					t.vl = addElm('td');
-					t.tr.appendChild(t.td);
-					t.tr.appendChild(t.vl);
-					prt.appendChild(t.tr);
+					t.cal = createElms(prt,'Kalorier:');
 				},
 				update:function(st) {
 					var t = this;
-					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
-				}
-			},{
-				init:function(prt) {
-					var t = this;
-					t.tr = addElm('tr');
-					t.td = addElm('td');
-					t.td.innerHTML = 'Liter diesel';
-					t.vl = addElm('td');
-					t.tr.appendChild(t.td);
-					t.tr.appendChild(t.vl);
-					prt.appendChild(t.tr);
-				},
-				update:function(st) {
-					var t = this;
-					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+					t.cal.innerHTML = st['berg'].diff+'/'+st['berg'].med;
 				}
 			}]);
 		},
@@ -661,32 +665,20 @@
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
-					t.tr = addElm('tr');
-					t.td = addElm('td');
-					t.td.innerHTML = 'Höjd (diff/medel)';
-					t.vl = addElm('td');
-					t.tr.appendChild(t.td);
-					t.tr.appendChild(t.vl);
-					prt.appendChild(t.tr);
+					t.height = createElms(prt,'Höjdskillnad:');
 				},
 				update:function(st) {
 					var t = this;
-					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+					t.height.innerHTML = st['berg'].diff+'/'+st['berg'].med;
 				}
 			},{
 				init:function(prt) {
 					var t = this;
-					t.tr = addElm('tr');
-					t.td = addElm('td');
-					t.td.innerHTML = 'Liter diesel';
-					t.vl = addElm('td');
-					t.tr.appendChild(t.td);
-					t.tr.appendChild(t.vl);
-					prt.appendChild(t.tr);
+					t.liter = createElms(prt,'Liter diesel:');
 				},
 				update:function(st) {
 					var t = this;
-					t.vl.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+					t.liter.innerHTML = Math.round(st.distance*0.3)/10;
 				}
 			}]);
 		}
