@@ -25,9 +25,10 @@
 		request.send();
 	}
 
-	pathFinder.prototype.init = function(map) {
+	pathFinder.prototype.init = function(map,cb) {
 		var t = this;
 		t.canvas = addElm('canvas');
+		t.initCallback = cb;
 		t.ctx = t.canvas.getContext('2d');
 		t.mergeValues = {};
 		t.layer = {};
@@ -70,6 +71,7 @@
 					console.log('change',this.value);
 					t.mergeValues[i] = this.value;
 					t.mergeLayers();
+					t.changeCallbak();
 				},false);
 				prt.appendChild(inp);
 				t.obj.params.appendChild(prt);
@@ -147,7 +149,7 @@
 
 	pathFinder.prototype.gotLayer = function(data) {
 		var t = this;
-		console.log(data);
+		console.log('gotLayer',data);
 		if (data.channels) {
 			t.layer[data.id||'1'] = data;
 			var img = new Image();
@@ -261,9 +263,9 @@
 
 	var tmpLayers = ['layer1'];
 
-	w.initSearch = function(map) {
+	w.initSearch = function(map,changeCallbak) {
 		console.log('init',map);
-		finder.init(map);
+		finder.init(map,changeCallbak);
 		jsonGet('/1/layers',function(d) {
 			finder.getLayers(d['layers']);	
 		});
