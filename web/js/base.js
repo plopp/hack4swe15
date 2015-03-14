@@ -176,6 +176,7 @@
 	function mapValuesInLayer(layerDefinition) {
 		var imgdatapixels = layerDefinition.imageData;
 		layerDefinition.absoluteValues = null;
+		layerDefinition.realValues = null;
 
 		function clamp(v) {
 			return Math.min(Math.max(v, 0), 1);
@@ -186,21 +187,27 @@
 				return;
 
 			var absoluteValues = [];
+			var realValues = [];
 
 			layerDefinition.inmin = ch.inputrange[0];
 			layerDefinition.inmax = ch.inputrange[1];
 			layerDefinition.outmin = ch.outputrange[0];
 			layerDefinition.outmax = ch.outputrange[1];
+			layerDefinition.dispmin = ch.displayrange[0];
+			layerDefinition.dispmax = ch.displayrange[1];
 
 			var indiff = layerDefinition.inmax - layerDefinition.inmin;
 			var outdiff = layerDefinition.outmax - layerDefinition.outmin;
+			var dispdiff = layerDefinition.dispmax - layerDefinition.dispmin;
 
 			for(var i=0; i<imgdatapixels.length; i+=4) {
 				var val = imgdatapixels[i + ch.channel];
 				absoluteValues.push((clamp((val - layerDefinition.inmin) / indiff) * outdiff) + layerDefinition.outmin);
+				realValues.push((clamp((val - layerDefinition.inmin) / indiff) * dispdiff) + layerDefinition.dispmin);
 			}
 
 			layerDefinition.absoluteValues = absoluteValues;
+			layerDefinition.realValues = realValues;
 		});
 	}
 
@@ -324,7 +331,7 @@
 		var ret = {};
 		for(var i in t.layer) {
 			var l = t.layer[i];
-			ret[i] = l.absoluteValues[y*t.size.width+x];
+			ret[i] = l.realValues[y*t.size.width+x];
 		}
 		return ret;
 	}
