@@ -111,6 +111,8 @@
 
 		<script type="text/javascript">
 				window.addEventListener('load', function() {
+					var waitingForStartClick = false;
+					var waitingForEndClick = false;
 					var butts =document.getElementsByTagName("button");
 					for(var z =0; z < butts.length; z++){
 						var elem = butts[z];
@@ -119,9 +121,11 @@
 							var id = event.toElement.id;
 							switch(id){
 								case "setStart":
+									waitingForStartClick = true;
 									console.log("Start");
 									break;
 								case "setEnd":
+									waitingForEndClick = true;
 									console.log("End");
 									break;
 							}
