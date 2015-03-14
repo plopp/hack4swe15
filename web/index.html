@@ -111,9 +111,14 @@
 
 		<script type="text/javascript">
 				window.addEventListener('load', function() {
+					var nofPoints = 0 //Counts clicks
 					var waitingForStartClick = false;
 					var waitingForEndClick = false;
 					var butts =document.getElementsByTagName("button");
+					var startx = 0;
+					var starty = 0;
+					var endx = 0;
+					var endy = 0;
 					for(var z =0; z < butts.length; z++){
 						var elem = butts[z];
 						//console.log(elem);
@@ -147,7 +152,27 @@
 					var map = new google.maps.Map(document.getElementById("map"),myOptions);
 
 					google.maps.event.addListener(map, 'click', function(event) {
-				    	console.log(event);
+						console.log(cntDiv);
+						switch(nofPoints){
+							case 0:
+								startx = event.pixel.x;
+								starty = event.pixel.y;
+								console.log("Start: "+startx+" "+starty);
+								document.getElementById("clickStatus").innerHTML = "Select point B!";
+								nofPoints++;
+								break;
+							case 1:
+								endx = event.pixel.x;
+								endy = event.pixel.y;
+								console.log("End: "+endx+" "+endy);
+								document.getElementById("clickStatus").innerHTML = "Select point A!";
+
+								finder.getMergedArray(prepareSearch);
+								nofPoints = 0;
+								break;
+						}
+						console.log(nofPoints);
+				    	console.log(event.pixel);
 				  	});
 
 					var canvasElement = document.createElement('canvas');
@@ -168,17 +193,21 @@
 						console.log("Added overlay");
 					}/*,sim*/);
 
-					var prepareSeach = function(data){
-						var graph = new Graph(data);
+					var prepareSearch = function(data){
 						startx = 0;
 						starty = 0;
 						endx = 299;
 						endy = 149;
-
+						if(startx == 0 && starty == 0 && endx == 0 && endy == 0){
+							return;
+						}
+						var graph = new Graph(data);
+						
 						var start = graph.grid[starty][startx];
 						var end = graph.grid[endy][endx];
 
 						var ctx = canvasElement.getContext("2d");
+						//ctx.clearRect(0,0,canvasElement.width,canvasElement.height);
 						//ctx.fillStyle = "#FF0000";
 						//ctx.strokeStyle = "#FF0000";
 						ctx.rect(0,0,canvasElement.width,canvasElement.height);
@@ -190,7 +219,7 @@
 						
 						ctx.moveTo(startx,starty);
 						var result = astar.search(graph, start, end);
-						console.log(result);
+						
 						for (var i = 0; i < result.length; i++) {
 							var x = result[i].x;
 							var y = result[i].y;
@@ -200,8 +229,12 @@
 						ctx.stroke();
 					}
 
-					finder = window.initSearch(map);
-					finder.getMergedArray(prepareSeach);
+					var constraintChangeCallback = function(){
+						console.log("Changed!");
+						finder.getMergedArray(prepareSearch);
+					}
+
+					finder = window.initSearch(map,constraintChangeCallback);
 
 					// result is an array containing the shortest path
 				});
@@ -210,6 +243,7 @@
 		<div class="guidiv">
 			<button id="setStart">Set start point</button>
 			<button id="setEnd">Set end point</button>
+			<div id="clickStatus" style="width: 100px; height: 40px; color: #000000; background: #FFFFFF; padding: 10px; margin: 4px">Select point A!</div>
 		</div>
 </body>
 </html>
