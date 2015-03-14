@@ -101,17 +101,18 @@
 
 	pathFinder.prototype.repaintParams = function(data) {
 		var t = this;
-		console.log('hoho paint paramas');
+		//console.log('hoho paint paramas');
 		t.obj.params.innerHTML = '';
 		for(var j in t.layer) {
 			(function(i) {
-				console.log(i,t.layer);
+				//console.log(i,t.layer);
 				var prt = addElm('li');
 				var lbl = addElm('label',{'for':'prc_'+i});
 				var inp2 = addElm('input',{'id':'prc_'+i,'type':'checkbox',checked:1});
-				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-20,max:20,value:1});
+				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-40,max:40,value:1});
 				inp.addEventListener('change',function() {
-					t.layerMultiplier[i] = this.value;
+					t.layerMultiplier[i] = -this.value;
+					console.log(JSON.stringify(t.layerMultiplier));
 					t.mergeLayers();
 					t.changeCallback && t.changeCallback();
 				},false);
@@ -120,7 +121,7 @@
 					t.mergeLayers();
 					t.changeCallback && t.changeCallback();
 				},false);
-				t.layerMultiplier[i] = 1;
+				t.layerMultiplier[i] = -1;
 				t.layerEnabled[i] = true;
 				prt.appendChild(inp2);
 				prt.appendChild(lbl);
@@ -151,11 +152,11 @@
 		var N = layers.length;
 
 		layers.forEach(function(i,v) {
-			console.log(i,v);
+			//console.log(i,v);
 			t.loadMap(i.data, function() {
 				N --;
 				if (N == 0) {
-					console.log('all loaded.');
+					//console.log('all loaded.');
 
 					layers.sort(function(a,b) {
 						if (a.id < b.id)
@@ -212,14 +213,14 @@
 		//console.log('gotLayer',data);
 		if (data.channels) {
 			t.layer[data.id||'1'] = data;
-			console.log('loading ' + data.image);
+			//console.log('loading ' + data.image);
 			var img = new Image();
 			img.onload = function() {
 				t.ctx.drawImage(this,0,0, t.size.width, t.size.height);
 				var imageData = t.ctx.getImageData(0, 0, t.size.width, t.size.height);
 				var d = data.imageData = imageData.data;
 				mapValuesInLayer(data);
-				console.log('loaded ' + data.image);
+				//console.log('loaded ' + data.image);
 				cb();
 			};
 			img.src = data.image;
@@ -240,7 +241,7 @@
 				for(var i in t.layer) {
 					var lay = t.layer[i];
 					if (lay.absoluteValues && t.layerEnabled[i]) {
-						if (x == 10 && y == 10) console.log(lay ,t );
+						//if (x == 10 && y == 10) console.log(lay ,t );
 						tot += lay.absoluteValues[y * size.width + x] * (t.layerMultiplier[i] + 0.01);
 					}
 				}
@@ -252,7 +253,7 @@
 		}
 
 		t.outData = arr;
-		console.log('final output', arr);
+		//console.log('final output', arr);
 
 		t.paintMergedLayer();
 		return arr;
@@ -315,7 +316,7 @@
 
 	pathFinder.prototype.setStart = function(pos) {
 		this.startPos = pos;
-		console.log('set start',pos);
+		//console.log('set start',pos);
 	}
 
 	pathFinder.prototype.getLayerData = function(x,y) {
@@ -323,12 +324,11 @@
 		var ret = {};
 		for(var i in t.layer) {
 			var l = t.layer[i];
-			console.log(l,x,y);
-			ret[i] = l.values[y*t.size.width+x];
+			ret[i] = l.absoluteValues[y*t.size.width+x];
 		}
 		return ret;
 	}
-
+/*
 	function bspline(lats, lons) {
 	    var i, t, ax, ay, bx, by, cx, cy, dx, dy, lat, lon, points;
 	    points = [];
@@ -350,7 +350,7 @@
 	    }
 	    return points;
 	}
-
+*/
 	pathFinder.prototype.plotPath = function(result) {
 		var t = this;
 
@@ -363,7 +363,7 @@
 		if (finder.showDebug) {
 			finder.drawDebug(ctx);
 		}
-
+/*
 		ctx.beginPath();
 		ctx.rect(0,0,t.debugCanvas.width,t.debugCanvas.height);
 		ctx.stroke();
@@ -379,11 +379,11 @@
 			};
 			ctx.stroke();
 		}
-
+*/
 
 
 		// Plot on map
-		console.log('got result',result);
+		//console.log('got result',result);
 
 		var totDist = 0;
 		distArr = [[0,0]];
@@ -422,14 +422,15 @@
 			var y = result[i][1];
 			//console.log(x,y,t.overlay);
 			var latLng = t.overlay.getPos(x,y);
-			if (i%4==1) {
+			//if ((i%5)==1) {
 				lats.push(latLng.lat());
 				lngs.push(latLng.lng());
-			}
+			//}
 			pathCoord.push(latLng);
 		}
-		t.totalPath = pathCoord;
-		t.splinePath = bspline(lats,lngs);
+		t.absolutePath = pathCoord;
+		//t.splinePath = bspline(lats,lngs);
+		//console.log(t.totalPath.length,t.splinePath.length);
 
 		if (t.posMarker)
 			t.posMarker.setMap(null);
@@ -451,7 +452,8 @@
 
 		t.currentPos = 0;
 		t.splitPos = 0;
-		t.plotSingle();
+		t.stats = {};
+		
 /*
 		var flightPath = t.currentPoly = new google.maps.Polyline({
 			path: pathCoord,
@@ -462,8 +464,47 @@
 		});
 */
 		var totLength = google.maps.geometry.spherical.computeLength(pathCoord);
-		console.log(totLength);
+		console.log('Total längd',totLength);
+		t.personData = new persona.maskin();
+		for(var i in t.personData.keys) {
+			var k = t.personData.keys[i];
+			k.init(d.getElementById('tbldata'));
+		}
+		t.plotSingle();
 		//flightPath.setMap(t.map);
+	}
+
+	pathFinder.prototype.calcData = function(currData) {
+		var t = this;
+		for(var i in currData) {
+			var cd = currData[i];
+			if (!t.stats[i])
+				t.stats[i] = {};
+			var st = t.stats[i];
+			if (!st.noi)
+				st.noi = 0;
+			st.noi++;
+			if (!st.diff)
+				st.diff = 0;
+			st.diff+=(st.lastVal-cd); 
+			st.lastVal = cd;
+			st.total = (t.stats[i].total||0)+cd;
+			st.med = st.total/st.noi;
+			if (!st.overThreshold)
+				st.overThreshold =0;
+			if (!st.underThreshold)
+				st.underThreshold =0;
+			if (cd>t.layer[i].tresholdLower||0.1)
+				st.overThreshold++;
+			if (cd<t.layer[i].tresholdHigh||0.9)
+				st.underThreshold++;
+		}
+		if (t.personData) {
+			for(var i in t.personData.keys) {
+				var k = t.personData.keys[i];
+				k.update(t.stats);
+			}
+		}
 	}
 
 	pathFinder.prototype.plotSingle = function() {
@@ -472,20 +513,33 @@
 		var cp = t.splinePath;
 		var pth = path.getPath();
 
-		if (t.currentPos|4==0) {
-
-			var cdata = t.splinePath[t.splitPos++];
+		//if ((t.currentPos%5)==1) {
+			var mapPos = t.result[t.currentPos];
+			var data = t.getLayerData(mapPos[0],mapPos[1]);
+			//console.log(data);
+			var cdata = t.absolutePath[t.currentPos];
 			pth.push(cdata);
 			//t.result[t.currentPos];
 			t.posMarker.setPosition(cdata);
-		}
+		//}
+		
+		t.calcData(data);
+
 		t.currentPos++;
-		if (t.currentPos<t.totalPath.length)
-			setTimeout(function() { t.plotSingle(); },10);
+		if (t.plotTimer)
+			clearTimeout(t.plotTimer);
+		if (t.currentPos<t.absolutePath.length) {
+			t.plotTimer = setTimeout(function() { t.plotSingle(); },10);
+		}
+		else {
+			console.log(t.stats);
+		}
 	}
 
 	pathFinder.prototype.findPath = function() {
 		var t = this;
+		if(!t.startPos || !t.endPos)
+			return;
 		var data = t.outData;
 		var grid = new PF.Grid(t.size.width,t.size.height,data);
 		var pathfinder = new PF.AStarFinder({
@@ -498,7 +552,7 @@
 				grid.setWeightAt(i, j, data[j][i]);
 			}
 		}
-		console.log('findpath',t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y,t.size);
+//		console.log('findpath',t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y,t.size);
 		t.result = pathfinder.findPath(t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y, grid);
 		t.plotPath(t.result);
 	}
@@ -523,6 +577,30 @@
 	var finder = new pathFinder();
 
 	var tmpLayers = ['layer1'];
+
+
+	var persona = {
+		maskin:function() {
+			this.params = {"backar":"-6","berg":"-13","forn":1,"hojd":1,"osamjord":1,"skog":1,"urberg":1,"vag":"-7","vatten":1},
+			this.keys = [{
+				init:function(prt) {
+					var t = this;
+					t.tr = addElm('tr');
+					t.td = addElm('td');
+					t.td.innerHTML = 'Höjd:';
+					t.vl = addElm('td');
+					t.tr.appendChild(t.td);
+					t.tr.appendChild(t.vl);
+					prt.appendChild(t.tr);
+				},
+				update:function(st) {
+					var t = this;
+					t.vl.innerHTML = st['berg'].diff;
+				}
+			}]
+		}
+	}
+
 
 	w.initSearch = function(map,changeCallbak) {
 		
