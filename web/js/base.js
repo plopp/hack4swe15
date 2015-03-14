@@ -205,7 +205,6 @@
 				absoluteValues.push((clamp((val - layerDefinition.inmin) / indiff) * outdiff) + layerDefinition.outmin);
 				realValues.push((clamp((val - layerDefinition.inmin) / indiff) * dispdiff) + layerDefinition.dispmin);
 			}
-
 			layerDefinition.absoluteValues = absoluteValues;
 			layerDefinition.realValues = realValues;
 		});
@@ -627,6 +626,11 @@
 		return vl;
 	}
 
+	function round(val,dec,unit){
+		var pow = Math.pow(10,dec);
+		return (Math.round(val*pow)/pow)+' '+(unit || '');
+	}
+
 
 	var defaultKeys = [{
 				init:function(prt) {
@@ -635,13 +639,21 @@
 				},
 				update:function(st) {
 					var t = this;
-					var unit = ' m';
-					var dist = Math.round(st.distance);
-					if (dist>4000) {
-						dist = Math.round(dist/100)/10;
-						unit = ' km';
+					var dist = round(st.distance,0,'m');
+					if (st.distance>4000) {
+						dist = round(st.distance,0,'km');
 					}
-					t.dist.innerHTML = dist+unit;
+					t.dist.innerHTML = dist;
+				}
+			},
+			{
+				init:function(prt) {
+					var t = this;
+					t.akthojd = createElms(prt,'Aktuell höjd:');
+				},
+				update:function(st) {
+					var t = this;
+					t.akthojd.innerHTML = round(st['hojd'].lastVal,1,'m');
 				}
 			}];
 
@@ -662,7 +674,7 @@
 				},
 				update:function(st) {
 					var t = this;
-					t.cal.innerHTML = Math.round(st.distance*0.3)/10;
+					t.cal.innerHTML = round(st.distance*0.03,1,'kcal');
 				}
 			}]);
 		},
@@ -676,16 +688,16 @@
 				},
 				update:function(st) {
 					var t = this;
-					t.height.innerHTML = st['berg'].diff+'/'+st['berg'].med;
+					t.height.innerHTML = round(st['hojd'].diff,1,'m');
 				}
 			},{
 				init:function(prt) {
 					var t = this;
-					t.liter = createElms(prt,'Liter diesel:');
+					t.liter = createElms(prt,'Diesel:');
 				},
 				update:function(st) {
 					var t = this;
-					t.liter.innerHTML = Math.round(st.distance*0.3)/10;
+					t.liter.innerHTML = round(st.distance*0.03,1,'L');
 				}
 			}]);
 		}
