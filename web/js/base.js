@@ -62,6 +62,7 @@
 				var prt = addElm('li'); 
 				
 				var lbl = addElm('label',{'for':'prm_'+i});
+				lbl.innerHTML = data.description;
 				prt.appendChild(lbl);
 				var inp = addElm('input',{'id':'prm_'+i,'type':'range',min:-16,max:16,value:0});
 				inp.addEventListener('change',function() {
