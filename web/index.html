@@ -176,6 +176,12 @@
 				    	console.log(event.pixel);
 				  	});
 
+				  	google.maps.event.addListenerOnce(map,"projection_changed", function() {
+						projection = map.getProjection();
+
+						console.log('prjection change',projection);
+					});
+
 					var canvasElement = document.createElement('canvas');
 					canvasElement.width = '1000';
 					canvasElement.height = '500';
@@ -237,6 +243,34 @@
 
 						ctx.beginPath();
 						// var result = astar.search(graph, start, end);
+
+						var flightPlanCoordinates = [
+						  ];
+
+						for (var i = 0; i < result.length; i++) {
+
+							var x = result[i][0];
+							var y = result[i][1];
+							console.log(x,y,overlay);
+
+							var latLng = overlay.getPos(x,y);//overlay.projection.fromPointToLatLng(x,y);
+							
+							flightPlanCoordinates.push(latLng);
+						}
+
+						  var flightPath = new google.maps.Polyline({
+						    path: flightPlanCoordinates,
+						    geodesic: true,
+						    strokeColor: '#FF0000',
+						    strokeOpacity: 1.0,
+						    strokeWeight: 2
+						  });
+
+						  flightPath.setMap(map);
+
+
+						
+
 						for (var i = 0; i < result.length; i++) {
 							var x = result[i][0];
 							var y = result[i][1];
@@ -260,6 +294,8 @@
 					}
 
 					finder = window.initSearch(map,constraintChangeCallback);
+					var projection;
+					
 
 					// result is an array containing the shortest path
 				});

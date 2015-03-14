@@ -51,11 +51,17 @@ SimulatorOverlay.prototype.onAdd = function() {
   panes.overlayLayer.appendChild(this._elm);
 };
 
+SimulatorOverlay.prototype.getPos = function(x,y) {
+    var proj = this.getProjection();
+    return proj.fromDivPixelToLatLng(new google.maps.Point(x,y));
+}
+
 SimulatorOverlay.prototype.draw = function() {
   // We use the south-west and north-east
   // coordinates of the overlay to peg it to the correct position and size.
   // To do this, we need to retrieve the projection from the overlay.
   var overlayProjection = this.getProjection();
+
   var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
   var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
   // Resize the image's div to fit the indicated dimensions.
