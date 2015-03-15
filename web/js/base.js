@@ -391,34 +391,6 @@
 		// Plot on map
 		//console.log('got result',result);
 
-		var totDist = 0;
-		distArr = [[0,0]];
-		for (var i = 1; i < result.length; i++) {
-			var x = result[i][0]-result[i-1][0];
-			var y = result[i][1]-result[i-1][1];
-			totDist += Math.sqrt(x*x + y*y);
-			distArr.push([i,totDist]);
-		};
-
-		new Dygraph(
-            d.getElementById("div_g"),
-            distArr, {
-				rollPeriod: 7,
-				//legend: 'always',
-				title: 'Topology',
-				titleHeight: 16,
-				drawAxis: false,
-				drawXGrid: false,
-				drawYGrid: false,
-				drawLabels: false,
-				labelsDivStyles: {
-					'text-align': 'right',
-					'background': 'none'
-				},
-				strokeWidth: 1.5
-            }
-        );
-
 		var t = this;
 		var pathCoord = [];
 		var lats = [];
@@ -473,7 +445,7 @@
 		
 		console.log('Total längd',totLength);
 		
-		t.setPersona();
+		//t.setPersona();
 		t.plotSingle();
 		//flightPath.setMap(t.map);
 	}
@@ -485,9 +457,12 @@
 			if (!t.stats[i])
 				t.stats[i] = {};
 			var st = t.stats[i];
-			if (!st.noi)
+			if (st.noi===undefined){
 				st.noi = 0;
-			st.noi++;
+			}
+			else{ 
+				st.noi++;
+			}
 			if (!st.diff)
 				st.diff = 0;
 			st.diff+=(st.lastVal-cd); 
@@ -521,7 +496,7 @@
 		if (t.personData) {
 			for(var i in t.personData.keys) {
 				var k = t.personData.keys[i];
-				k.update(t.stats);
+				k.update.apply(t.personData,[t.stats]);
 			}
 		}
 	}
@@ -548,7 +523,7 @@
 		if (t.plotTimer)
 			clearTimeout(t.plotTimer);
 		if (t.currentPos<t.absolutePath.length) {
-			t.plotTimer = setTimeout(function() { t.plotSingle(); },10);
+			t.plotTimer = setTimeout(function() { t.plotSingle(); },1);
 		}
 		else {
 			console.log(t.stats);
@@ -574,12 +549,18 @@
 		}
 //		console.log('findpath',t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y,t.size);
 		t.result = pathfinder.findPath(t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y, grid);
+		console.log("before initpersona");
+		t.initPersona();
+		console.log("after initpersona");
+		console.log(t.result);
 		t.plotPath(t.result);
 	}
 
-	pathFinder.prototype.setPersona = function() {
+	pathFinder.prototype.initPersona = function() {
 		var t = this;
-		var pers = t.personData = new persona[t.currentPersona]();
+		var pers = t.personData;
+		t.personData.result = t.result;
+		console.log("Pers: ",pers);
 		for(var i in pers.params)
 		{
 			var val = pers.params[i];
@@ -588,10 +569,36 @@
 		}
 		var elm = d.getElementById('tbldata');
 		elm.innerHTML = '';
+
+		var graph = new Dygraph(
+            d.getElementById("div_g"),
+            [[0,0]], {
+				rollPeriod: 7,
+				//legend: 'always',
+				title: 'Topology',
+				titleHeight: 16,
+				drawAxis: false,
+				drawXGrid: false,
+				drawYGrid: false,
+				drawLabels: false,
+				labelsDivStyles: {
+					'text-align': 'right',
+					'background': 'none'
+				},
+				strokeWidth: 1.5
+            }
+        );
+
 		for(var i in pers.keys) {
 			var k = pers.keys[i];
-			k.init(elm);
+			k.init.apply(pers,[elm, graph]);
 		}
+	}
+
+	pathFinder.prototype.setPersona = function() {
+		console.trace("setPersona");
+		var t = this;
+		var pers = t.personData = new persona[t.currentPersona]();
 	}
 
 	pathFinder.prototype.setEnd = function(pos) {
@@ -633,27 +640,36 @@
 
 
 	var defaultKeys = [{
-				init:function(prt) {
+				init:function(prt,graph) {
 					var t = this;
+					t.graph = graph;
 					t.dist = createElms(prt,'Distans:');
 				},
 				update:function(st) {
 					var t = this;
 					var dist = round(st.distance,0,'m');
 					if (st.distance>4000) {
-						dist = round(st.distance,0,'km');
+						dist = round(st.distance/1000.0,2,'km');
 					}
 					t.dist.innerHTML = dist;
 				}
 			},
 			{
-				init:function(prt) {
+				init:function(prt,graph) {
 					var t = this;
+					t.topologyArr = [];
+					for (var i = 0; i < t.result.length; i++) {
+						t.topologyArr.push([i,null]);
+					};
+					t.graph = graph;
 					t.akthojd = createElms(prt,'Aktuell höjd:');
 				},
 				update:function(st) {
 					var t = this;
 					t.akthojd.innerHTML = round(st['hojd'].lastVal,1,'m');
+					t.topologyArr[st['hojd'].noi]= [st['hojd'].noi,st['hojd'].lastVal];
+					var totDist = 0;
+					t.graph.updateOptions({'file': t.topologyArr});
 				}
 			}];
 
@@ -705,7 +721,6 @@
 
 	
 	w.initSearch = function(map,changeCallbak) {
-		
 		var personaSelect = d.getElementById('persona');
 		personaSelect.addEventListener('change',function() {
 			finder.currentPersona = this.value;
@@ -722,6 +737,7 @@
 		finder.currentPersona = 'custom';
 
 		finder.init(map,changeCallbak);
+		finder.setPersona();
 		jsonGet('/1/layers',function(d) {
 			finder.getLayers(d['layers']);	
 		});
