@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="js/base.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&libraries=geometry"></script>
 	<script type='text/javascript' src='js/overlaycanvas.js'></script>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<script type='text/javascript' src='bower_components/pathfinding/pathfinding-browser.js'></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.0/dygraph-combined.js"></script>
 </head>
@@ -105,200 +106,24 @@
 	]];
 	</script>
 		<div id="map"></div>
-		<div id="overlay"></div>
-		<div id="graph"></div>
 		<div id="paramcnt">
 			<label for="persona">Preset:</label>
 			<select id="persona"></select>
-			<div id="params"></div>
+			<div class="button"><i class="fa fa-toggle-off" id="toggleParam">Toggle</i></div>
+			<div id="params" class="closed"></div>
+			<div id="metrics" class="open">
+			<div id="div_g" class="chart"></div>
+			<table style="width:100%" id="tbldata">
+			  	
+			</table>
+		</div>
 		</div>
 		
 		<div id="debug"></div>
 
 		<script type="text/javascript">
 				window.addEventListener('load', function() {
-					/*var nofPoints = 0 //Counts clicks
-					var waitingForStartClick = false;
-					var waitingForEndClick = false;
-					var startx = 0;
-					var starty = 0;
-					var endx = 0;
-					var endy = 0;
-
-					var centerlatlng = new google.maps.LatLng(60.627800,15.660929);
-
-					var myOptions = {
-						disableDefaultUI: true,
-						zoom:14,
-						center:centerlatlng,
-						mapTypeId:google.maps.MapTypeId.SATELLITE,
-						draggableCursor:'crosshair',
-						//styles:layerStyle[0],
-						scaleControl:false
-					};
-
-					var map = new google.maps.Map(document.getElementById("map"),myOptions);
-
-					google.maps.event.addListener(map, 'click', function(event) {
-						//console.log(cntDiv);
-						switch(nofPoints){
-							case 0:
-								startx = event.pixel.x;
-								starty = event.pixel.y;
-								//console.log("Start: "+startx+" "+starty);
-								document.getElementById("clickStatus").innerHTML = "Select point B!";
-								nofPoints++;
-								break;
-							case 1:
-								endx = event.pixel.x;
-								endy = event.pixel.y;
-								//console.log("End: "+endx+" "+endy);
-								document.getElementById("clickStatus").innerHTML = "Select point A!";
-
-								finder.getMergedArray(prepareSearch);
-								nofPoints = 0;
-								break;
-						}
-						//console.log(nofPoints);
-				    	//console.log(event.pixel);
-				  	});
-
-					var canvasElement = document.createElement('canvas');
-					canvasElement.width = '1000';
-					canvasElement.height = '500';
-					//canvasElement.style.width = '100%';
-					//canvasElement.style.height = '100%';
-
-					var cntDiv = document.createElement('div');
-					cntDiv.style.position = 'absolute';
-					cntDiv.style.width = '100%';
-					cntDiv.style.height = '100%';
-					cntDiv.style.opacity = 0.5;
-					cntDiv.appendChild(canvasElement);
-
-					google.maps.event.addListener(map, 'click', function(e) {
-						var ll = e.latLng;
-						console.log('clicked at location', ll);
-					});
-
-					var sw = new google.maps.LatLng( 60.619197236209565, 15.63852310180664 );
-					var ne = new google.maps.LatLng( 60.654928439140036, 15.746583938598633 );
-					var bn = new google.maps.LatLngBounds(sw,ne);
-
-					overlay = new SimulatorOverlay(bn, cntDiv, map, finder, function(){
-						console.log("Added overlay");
-					});
-
-					var prepareSearch = function(data) {
-						// console.log('prepareSearch', data);
-						startx = 40;
-						starty = 40;
-						endx = data[0].length - 40;
-						endy = data.length - 40;
-						if(startx == 0 && starty == 0 && endx == 0 && endy == 0){
-							return;
-						}
-
-						var grid = new PF.Grid(data[0].length, data.length, data);
-						for(var j=0; j<data.length-1; j++) {
-							for(var i=0; i<data[0].length-1; i++) {
-								grid.setWalkableAt(i, j, true);
-								grid.setWeightAt(i, j, data[j][i]);
-							}
-						}
-						var pathfinder = new PF.AStarFinder({
-							heuristic: PF.Heuristic.euclidean
-						});
-						var result = pathfinder.findPath(startx, starty, endx, endy, grid);
-						//console.log('result', result);
-
-						var totDist = 0;
-						distArr = [[0,0]];
-						for (var i = 1; i < result.length; i++) {
-							var x = result[i][0]-result[i-1][0];
-							var y = result[i][1]-result[i-1][1];
-							totDist += Math.sqrt(x*x + y*y);
-							distArr.push([i,totDist]);
-						};
-
-						console.log(distArr);
-
-						new Dygraph(
-				            document.getElementById("div_g"),
-				            distArr, {
-								rollPeriod: 7,
-								//legend: 'always',
-								title: 'Topology',
-								titleHeight: 16,
-								drawAxis: false,
-								drawXGrid: false,
-								drawYGrid: false,
-								drawLabels: false,
-								labelsDivStyles: {
-									'text-align': 'right',
-									'background': 'none'
-								},
-								strokeWidth: 1.5
-				            }
-				        );
-
-						// // var graph = new Graph(data, { diagonal: false });
-						// var start = graph.grid[starty][startx];
-						// var end = graph.grid[endy][endx];
-
-						var ctx = canvasElement.getContext("2d");
-						ctx.clearRect(0,0,canvasElement.width,canvasElement.height);
-						ctx.fillStyle = "#FF0000";
-						ctx.strokeStyle = "#FF00FF";
-
-						if (finder.showDebug) {
-							finder.drawDebug(ctx);
-						}
-
-						ctx.beginPath();
-						ctx.rect(0,0,canvasElement.width,canvasElement.height);
-						//console.log("Area size: "+canvasElement.width+"px "+canvasElement.height+"px");
-						ctx.stroke();
-
-						var flightPlanCoordinates = [];
-
-						for (var i = 0; i < result.length; i++) {
-							var x = result[i][0];
-							var y = result[i][1];
-							// console.log(x,y,overlay);
-							var latLng = overlay.getPos(x,y);
-							flightPlanCoordinates.push(latLng);
-						}
-
-						var flightPath = new google.maps.Polyline({
-							path: flightPlanCoordinates,
-							geodesic: true,
-							strokeColor: '#FF0000',
-							strokeOpacity: 1.0,
-							strokeWeight: 2
-						});
-
-						flightPath.setMap(map);
-
-						if (finder.showDebug) {
-							ctx.beginPath();
-							for (var i = 0; i < result.length; i++) {
-								var x = result[i][0];
-								var y = result[i][1];
-								ctx.strokeStyle = 'blue';
-								ctx.lineTo(x,y);
-								ctx.moveTo(x,y);
-							};
-							ctx.stroke();
-						}
-					}
-
-					var constraintChangeCallback = function(){
-						//console.log("Changed!");
-						finder.getMergedArray(prepareSearch);
-					}
-*/
-
+					
 					var map = new google.maps.Map(document.getElementById("map"),{
 						disableDefaultUI: true,
 						zoom:14,
@@ -319,12 +144,7 @@
 				});
 
 		</script>
-		<div id="metrics">
-			<div id="div_g" class="chart"></div>
-			<table style="width:100%" id="tbldata">
-			  	
-			</table>
-		</div>
+		
 		
 </body>
 </html>

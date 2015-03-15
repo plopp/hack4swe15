@@ -73,7 +73,7 @@
 		var cnt = addElm('div');
 		cnt.style.width = '100%';
 		cnt.style.height = '100%';
-		cnt.style.border = 'solid 1px blue';
+		cnt.style.border = 'solid 1px rgba(255,255,255,0.3)';
 		cnt.style.position = 'absolute';
 		cnt.style.zIndex = '500';
 		cnt.appendChild(cvs);
@@ -417,7 +417,7 @@
 		//if (t.currentPoly)
 			//t.currentPoly.setMap(null);
 
-		var p = t.posMarker = new google.maps.Marker({title:'Du',position:pathCoord[0]});
+		var p = t.posMarker = new google.maps.Marker({title:'Du',position:pathCoord[0],icon:'/nyancat.png',animation:google.maps.Animation.DROP});
 		p.setMap(this.map);
 		
 		var cp = t.currentPaintPoly = new google.maps.Polyline({
@@ -561,12 +561,7 @@
 		var pers = t.personData;
 		t.personData.result = t.result;
 		console.log("Pers: ",pers);
-		for(var i in pers.params)
-		{
-			var val = pers.params[i];
-			d.getElementById('prm_'+i).value = val;
-			t.layerMultiplier[i] = val;
-		}
+		
 		var elm = d.getElementById('tbldata');
 		elm.innerHTML = '';
 
@@ -599,6 +594,15 @@
 		console.trace("setPersona");
 		var t = this;
 		var pers = t.personData = new persona[t.currentPersona]();
+		for(var i in pers.params)
+		{
+			var val = pers.params[i];
+			//console.log('set',val,i);
+			var elm = d.getElementById('prm_'+i);
+			if (elm)
+				elm.value = -val;
+			t.layerMultiplier[i] = val;
+		}
 	}
 
 	pathFinder.prototype.setEnd = function(pos) {
@@ -680,9 +684,9 @@
 			this.params = {"backar":"-1","berg":"-1","forn":-1,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":-1,"vag":"-1","vatten":-1},
 			this.keys = defaultKeys;
 		},
-		skogsmulle:function() {
-			this.title = 'Skogsmulle';
-			this.params = {"backar":"-6","berg":"2","forn":40,"hojd":1,"osamjord":1,"skog":10,"urberg":5,"vag":"-20","vatten":1},
+		falnn:function() {
+			this.title = 'Flanören';
+			this.params = {"backar":40,"berg":-1,"forn":-40,"hojd":19,"osamjord":-1,"skog":-1,"urberg":-1,"vag":-6,"vatten":39},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
@@ -695,8 +699,8 @@
 			}]);
 		},
 		maskin:function() {
-			this.title = 'Skogsmaskin';
-			this.params = {"backar":"-6","berg":"-13","forn":1,"hojd":1,"osamjord":1,"skog":1,"urberg":1,"vag":"-7","vatten":1},
+			this.title = 'Avverkaren';
+			this.params = {"backar":40,"berg":5,"forn":40,"hojd":15,"osamjord":-10,"skog":-30,"urberg":20,"vag":-32,"vatten":40},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
@@ -716,6 +720,34 @@
 					t.liter.innerHTML = round(st.distance*0.03,1,'L');
 				}
 			}]);
+		},
+		runner:function() {
+			this.title = 'Löparen';
+			this.params = {"backar":40,"berg":-1,"forn":-1,"hojd":33,"osamjord":-1,"skog":28,"urberg":-1,"vag":-40,"vatten":40},
+			this.keys = defaultKeys.concat([{
+				init:function(prt) {
+					var t = this;
+					t.cal = createElms(prt,'Kalorier:');
+				},
+				update:function(st) {
+					var t = this;
+					t.cal.innerHTML = round(st.distance*0.03,1,'kcal');
+				}
+			}]);
+		},
+		badarn:function() {
+			this.title = 'Badarn';
+			this.params = {"backar":-39,"berg":-1,"forn":-1,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":-1,"vag":40,"vatten":-40},
+			this.keys = defaultKeys.concat([{
+				init:function(prt) {
+					var t = this;
+					t.cal = createElms(prt,'Kalorier:');
+				},
+				update:function(st) {
+					var t = this;
+					t.cal.innerHTML = round(st.distance*0.03,1,'kcal');
+				}
+			}]);
 		}
 	}
 
@@ -733,6 +765,21 @@
 			elm.innerHTML = p.title;
 			personaSelect.appendChild(elm);
 		}
+
+		var tgl = d.getElementById('toggleParam');
+		tgl.addEventListener('click',function() {
+			var p = d.getElementById('params').classList;
+			p.toggle('closed');
+			p.toggle('open');
+
+			var m = d.getElementById('metrics').classList;
+			m.toggle('closed');
+			m.toggle('open');
+			//var newval = p.contains('toggle-on');
+			var tl = this.classList;
+			tl.toggle('fa-toggle-off');
+			tl.toggle('fa-toggle-on');
+		});
 
 		finder.currentPersona = 'custom';
 

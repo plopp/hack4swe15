@@ -12,16 +12,65 @@ body {
 	bottom:0;
 }
 
+* {
+	box-sizing: border-box;
+}
+
+.button {
+
+
+font-size: 14px;
+line-height: 20px;
+position: relative;
+display: inline-block;
+box-sizing: border-box;
+min-height: 34px;
+padding: 6px 12px;
+cursor: pointer;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+transition: background-color .25s ease,border-color .25s ease,color .25s ease;
+text-align: center;
+vertical-align: middle;
+white-space: normal;
+text-decoration: none;
+color: #fff;
+border: 1px solid #434a54;
+border-radius: 3px;
+background: #656d78;
+text-rendering: optimizeSpeed;
+-webkit-appearance: none;
+-webkit-font-smoothing: antialiased;
+color: #fff;
+border-color: #3bafda;
+background-color: #4fc1e9;
+
+
+}
+
 #paramcnt {
 	position: absolute;
 	width:350px;
 	z-index: 200;
 	background-color: #fff;
 	padding:10px 10px 0 10px;
-	right:10px;
-	top:60px;
-	box-sizing: border-box;
-	border-radius: 5px;
+	right:0px;
+	top:0px;
+	
+	border-radius: 0 0 0 5px;
+}
+#params, #metrics {
+	overflow: hidden;
+}
+#params.closed, #metrics.closed {
+	max-height: 0;
+}
+
+#params.open,,#metrics.open {
+	max-height: 500px;
+	overflow-y: auto;
 }
 
 #params li {
@@ -53,7 +102,7 @@ body {
 	z-index: 100;
 }
 
-#metrics {
+#oldmetrics {
 	position: absolute;
 	width:200px;
 	height:200px;
