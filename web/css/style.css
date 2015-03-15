@@ -53,8 +53,9 @@ background-color: #4fc1e9;
 
 .toggler {
 	position: absolute;
-	right:5px;
+	right:10px;
 	top:5px;
+	color: rgb(68,68,68);
 }
 
 select {
@@ -151,6 +152,7 @@ tr:nth-child(odd) td{
 #metrics table{
 	font-size: 10pt;
 }
+
 
 #div_g .dygraph-label { font-family: Arial; }
 
