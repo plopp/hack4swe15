@@ -708,7 +708,7 @@
 				},
 				update:function(st) {
 					var t = this;
-					console.log(round(st['hojd'].lastVal,1,'m'));
+					//console.log(round(st['hojd'].lastVal,1,'m'));
 					t.akthojd.innerHTML = round(st['hojd'].lastVal,1,'m');
 					t.topologyArr.push([Math.round(st.distance),st['hojd'].lastVal]);
 					var totDist = 0;
