@@ -799,7 +799,7 @@
 		},
 		maskin:function() {
 			this.title = 'Avverkaren';
-			this.params = {"backar":40,"berg":5,"forn":40,"hojd":15,"osamjord":-10,"skog":-30,"urberg":20,"vag":-32,"vatten":40},
+			this.params = {"backar":40,"berg":5,"forn":40,"hojd":15,"osamjord":-10,"skog":13,"urberg":20,"vag":32,"vatten":40},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
