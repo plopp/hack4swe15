@@ -102,7 +102,7 @@
 	pathFinder.prototype.repaintParams = function(data) {
 		var t = this;
 		//console.log('hoho paint paramas');
-		t.obj.params.innerHTML = '';
+		t.obj.params.innerHTML = '<img src="thumbs.png" class="thumbs" alt="Bra <--|--> Dåligt" />';
 		for(var j in t.layer) {
 			(function(i) {
 				//console.log(i,t.layer);
@@ -114,12 +114,12 @@
 					t.layerMultiplier[i] = -this.value;
 					console.log(JSON.stringify(t.layerMultiplier));
 					t.mergeLayers();
-					t.changeCallback && t.changeCallback();
+					//t.changeCallback && t.changeCallback();
 				},false);
 				inp2.addEventListener('change',function() {
 					t.layerEnabled[i] = this.checked;
 					t.mergeLayers();
-					t.changeCallback && t.changeCallback();
+					//t.changeCallback && t.changeCallback();
 				},false);
 				t.layerMultiplier[i] = -1;
 				t.layerEnabled[i] = true;
@@ -144,6 +144,12 @@
 			lbl.innerHTML = 'Show debug layer';
 			t.obj.params.appendChild(prt);
 		})();
+		var refresh = addElm('a',{'class':'refresh'});
+		refresh.innerHTML = 'Räkna om';
+		refresh.addEventListener('click',function() {
+			t.changeCallback && t.changeCallback();
+		});
+		t.obj.params.appendChild(refresh);
 	}
 
 	pathFinder.prototype.getLayers = function(layers) {
@@ -248,7 +254,10 @@
 					var lay = t.layer[i];
 					if (lay.absoluteValues && t.layerEnabled[i]) {
 						//if (x == 10 && y == 10) console.log(lay ,t );
-						tot += lay.absoluteValues[y * size.width + x] * (t.layerMultiplier[i] + 0.01);
+						var vl = t.layerMultiplier[i];
+						if (vl<1.01 && vl>-0.99)
+							vl = 1;
+						tot += lay.absoluteValues[y * size.width + x] * (vl + 0.01);
 					}
 				}
 				thisLine.push(tot);
@@ -583,7 +592,7 @@
 		//console.log("before initpersona");
 		t.initPersona();
 		//console.log("after initpersona");
-		//console.log(t.result);
+		///c/onsole.log(t.result);
 		toggleStates(false);
 		t.plotPath(t.result);
 	}
