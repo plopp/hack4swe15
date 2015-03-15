@@ -71,7 +71,7 @@ select {
 	z-index: 200;
 	background-color: #f4f4f4;
 	backgroundd: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.6));
-	padding:10px 10px 0 10px;
+	padding:10px 10px 10px 10px;
 	right:0px;
 	top:0px;
 	
@@ -95,6 +95,23 @@ select {
 	margin: 0;
 	box-sizing: border-box;
 	padding: 0 0 10px 0;
+}
+
+tr td:last-child {
+	text-align: right;
+}
+
+td {
+	border-bottom: solid 1px #ffffff;
+}
+
+table {
+	border-collapse:collapse;
+	padding-bottom: 10px;
+}
+
+tr:nth-child(odd) td{
+	background-color: #EEEEEE;
 }
 
 #params li input[type=range] {
@@ -145,15 +162,25 @@ select {
 
 #div_g .dygraph-legend { 
 	font-size: 10px !important; 
-	text-shadow: 
-	gray -2px 2px 2px; }
+}
 
 .chart { 
 	/*border: 1px dashed black; */
 	margin: 5px 5px 5px 5px; 
 	padding: 0px; 
-	position: relative; 	
-	width: 200px; 
+	width: 250px; 
 	height: 60px; 
 	z-index: 200;
+	float: left;
+	margin-top: 10px;
+}
+
+#myChart {
+	float: right;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+br {
+	clear:both;
 }
