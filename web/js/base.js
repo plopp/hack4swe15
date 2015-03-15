@@ -748,8 +748,10 @@
 				update:function(st) {
 					var t = this;
 					var sum = st['vag'].overThreshold+st['skog'].overThreshold;
-					t.road.innerHTML = round(100.0*(st['vag'].overThreshold/sum),1,'%');
-					t.forrest.innerHTML = round(100.0*(st['skog'].overThreshold/sum),1,'%');
+					t.roadshare = st['vag'].overThreshold/sum;
+					t.forestshare = st['skog'].overThreshold/sum;
+					t.road.innerHTML = round(100.0*(t.roadshare),1,'%');
+					t.forrest.innerHTML = round(100.0*(t.forestshare),1,'%');
 					var totDist = 0;
 				},
 				after:function(st){
@@ -808,8 +810,8 @@
 			}]);
 		},
 		maskin:function() {
-			this.title = 'Avverkaren';
-			this.params = {"backar":40,"berg":5,"forn":40,"hojd":15,"osamjord":-10,"skog":13,"urberg":20,"vag":32,"vatten":40},
+			this.title = 'Maskinföraren';
+			this.params = {"backar":40,"berg":5,"forn":40,"hojd":15,"osamjord":-10,"skog":13,"urberg":20,"vag":100,"vatten":-100},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
@@ -817,7 +819,7 @@
 				},
 				update:function(st) {
 					var t = this;
-					t.liter.innerHTML = round(st.distance*0.024,1,'L');
+					t.liter.innerHTML = round(st.distance*(t.roadshare*0.004 + t.forestshare*0.012),1,'L');
 				}
 			}]);
 		},
