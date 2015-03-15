@@ -1,6 +1,6 @@
 <h2>Hack for sweden 2015 contribution by G30h4ck3rs.</h2>
 
-A joint venture between <b>Spotify</b>, <b>Cavagent</b> and 
+A joint venture between hackers from <b>Spotify</b>, <b>Cavagent</b> and 
 <b>SP Technical Research Institute of Sweden</b>.
 <b>
 ```
