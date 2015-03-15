@@ -17,39 +17,7 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
-.button {
 
-
-font-size: 14px;
-line-height: 20px;
-position: relative;
-display: inline-block;
-box-sizing: border-box;
-min-height: 34px;
-padding: 6px 12px;
-cursor: pointer;
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-transition: background-color .25s ease,border-color .25s ease,color .25s ease;
-text-align: center;
-vertical-align: middle;
-white-space: normal;
-text-decoration: none;
-color: #fff;
-border: 1px solid #434a54;
-border-radius: 3px;
-background: #656d78;
-text-rendering: optimizeSpeed;
--webkit-appearance: none;
--webkit-font-smoothing: antialiased;
-color: #fff;
-border-color: #3bafda;
-background-color: #4fc1e9;
-
-
-}
 
 .toggler {
 	position: absolute;
@@ -65,6 +33,7 @@ select {
 
 #paramcnt {
 	position: absolute;
+	box-shadow: 2px 2px 22px 0px rgba(50, 50, 50, 0.5);
 	border:solid 3px rgba(255,255,255,0.7);
 	border-right:0;
 	border-top:0;
@@ -73,10 +42,10 @@ select {
 	background-color: #f4f4f4;
 	backgroundd: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.6));
 	padding:10px 10px 10px 10px;
-	right:0px;
-	top:0px;
+	right:10px;
+	top:10px;
 	
-	border-radius: 0 0 0 5px;
+	border-radius: 5px;
 }
 #params, #metrics {
 	transition:min-height 0.3s ease;
