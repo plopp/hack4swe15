@@ -471,15 +471,22 @@
 				st.diff = 0;
 			st.diff+=(st.lastVal-cd); 
 			
-			if (!st.totalInc)
+			if (st.totalInc === undefined){
 				st.totalInc = 0;
-			if (st.lastVal<cd) {
-				st.totalInc+=st.lastVal-cd;
 			}
-			if (!st.totalDec)
+			else{
+				if (st.lastVal && (st.lastVal<cd)) {
+					st.totalInc+=(cd-st.lastVal);
+				}
+			}
+
+			if (st.totalDec === undefined){
 				st.totalDec = 0;
-			if (st.lastVal>cd) {
-				st.totalDec-=st.lastVal-cd;
+			}
+			else{
+				if (st.lastVal && (st.lastVal>cd)) {
+					st.totalDec+=(st.lastVal-cd);
+				}
 			}
 			st.lastVal = cd;
 			st.total = (t.stats[i].total||0)+cd;
