@@ -155,3 +155,20 @@ tr:nth-child(odd) td{
 br {
 	clear:both;
 }
+
+#logocnt {
+	background:rgba(255,255,255,0.0);
+	padding: 10px;
+	position:absolute;
+	bottom: 0px;
+	left: 0px;
+	text-align: center;
+	color: #444;
+	z-index: 500;
+}
+
+#logocnt img {
+	max-width: 90px;
+	max-height: 100px;
+	margin:15px 0;
+}
