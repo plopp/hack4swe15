@@ -14,6 +14,7 @@ body {
 
 * {
 	box-sizing: border-box;
+	font-family: 'Open Sans', sans-serif;
 }
 
 .button {
@@ -48,6 +49,17 @@ border-color: #3bafda;
 background-color: #4fc1e9;
 
 
+}
+
+.toggler {
+	position: absolute;
+	right:5px;
+	top:5px;
+}
+
+select {
+	width:100%;
+	padding:7px 5px;
 }
 
 #paramcnt {
