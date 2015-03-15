@@ -691,7 +691,7 @@
 					t.akthojd.innerHTML = round(st['hojd'].lastVal,1,'m');
 					t.topologyArr.push([Math.round(st.distance),st['hojd'].lastVal]);
 					var totDist = 0;
-					console.log(st);
+					//console.log(st);
 					t.graph.updateOptions({'file': t.topologyArr,'labels':["m","Höjd"]});
 				}
 			},
