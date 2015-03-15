@@ -527,6 +527,7 @@
 		}
 		else {
 			console.log(t.stats);
+			t.posMarker.setAnimation(google.maps.Animation.BOUNCE);
 		}
 	}
 
@@ -553,6 +554,7 @@
 		t.initPersona();
 		console.log("after initpersona");
 		console.log(t.result);
+		toggleStates(false);
 		t.plotPath(t.result);
 	}
 
@@ -594,14 +596,16 @@
 		console.trace("setPersona");
 		var t = this;
 		var pers = t.personData = new persona[t.currentPersona]();
-		for(var i in pers.params)
-		{
-			var val = pers.params[i];
-			//console.log('set',val,i);
-			var elm = d.getElementById('prm_'+i);
-			if (elm)
-				elm.value = -val;
-			t.layerMultiplier[i] = val;
+		if (t.currentPersona!='custom') {
+			for(var i in pers.params)
+			{
+				var val = pers.params[i];
+				//console.log('set',val,i);
+				var elm = d.getElementById('prm_'+i);
+				if (elm)
+					elm.value = -val;
+				t.layerMultiplier[i] = val;
+			}
 		}
 	}
 
@@ -751,6 +755,21 @@
 		}
 	}
 
+	function toggleStates(state) {
+		console.log(state);
+		var p = d.getElementById('params').classList;
+		p.remove(state?'closed':'open');
+		p.add(state?'open':'closed');
+
+		var m = d.getElementById('metrics').classList;
+		m.remove(state?'open':'closed');
+		m.add(state?'closed':'open');
+		
+		var tl = d.getElementById('toggleParam').classList;
+		tl.remove(state?'fa-toggle-off':'fa-toggle-on');
+		tl.add(state?'fa-toggle-on':'fa-toggle-off');
+	}
+
 	
 	w.initSearch = function(map,changeCallbak) {
 		var personaSelect = d.getElementById('persona');
@@ -768,17 +787,9 @@
 
 		var tgl = d.getElementById('toggleParam');
 		tgl.addEventListener('click',function() {
-			var p = d.getElementById('params').classList;
-			p.toggle('closed');
-			p.toggle('open');
-
-			var m = d.getElementById('metrics').classList;
-			m.toggle('closed');
-			m.toggle('open');
-			//var newval = p.contains('toggle-on');
-			var tl = this.classList;
-			tl.toggle('fa-toggle-off');
-			tl.toggle('fa-toggle-on');
+			var tl = d.getElementById('toggleParam').classList;
+			var state = tl.contains('fa-toggle-off');
+			toggleStates(state);
 		});
 
 		finder.currentPersona = 'custom';

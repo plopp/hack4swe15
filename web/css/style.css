@@ -52,9 +52,13 @@ background-color: #4fc1e9;
 
 #paramcnt {
 	position: absolute;
+	border:solid 3px rgba(255,255,255,0.7);
+	border-right:0;
+	border-top:0;
 	width:350px;
 	z-index: 200;
-	background-color: #fff;
+	background-color: #f4f4f4;
+	backgroundd: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.6));
 	padding:10px 10px 0 10px;
 	right:0px;
 	top:0px;
@@ -62,29 +66,30 @@ background-color: #4fc1e9;
 	border-radius: 0 0 0 5px;
 }
 #params, #metrics {
+	transition:min-height 0.3s ease;
 	overflow: hidden;
 }
 #params.closed, #metrics.closed {
 	max-height: 0;
 }
 
-#params.open,,#metrics.open {
+#params.open, #metrics.open {
 	max-height: 500px;
-	overflow-y: auto;
+	overflow-y: hidden;
 }
 
 #params li {
 	list-style: none;
 	margin: 0;
 	box-sizing: border-box;
-	padding: 0 0 20px 0;
+	padding: 0 0 10px 0;
 }
 
 #params li input[type=range] {
 	display: block;
 	clear: both;
 	box-sizing: border-box;
-	padding-left: 40px;
+	padding-left: 0px;
 	width: 100%;
 }
 
