@@ -32,6 +32,24 @@ SimulatorOverlay.prototype.onAdd = function() {
 console.log('onAdd',this._elm);
   // Add the element to the "overlayLayer" pane.
   var panes = this.getPanes();
+  var t = this;
+  
+  function inBounds(point) {
+    console.log(t.bounds_);
+      var eastBound = point.long < t.bounds_.NE.long;
+      var westBound = point.long > t.bounds_.SW.long;
+      var inLong;
+
+      if (t.bounds_.NE.long < t.bounds_.SW.long) {
+          inLong = eastBound || westBound;
+      } else {
+          inLong = eastBound && westBound;
+      }
+
+      var inLat = point.lat > t.bounds_.SW.lat && point.lat < t.bounds_.NE.lat;
+      return inLat && inLong;
+  }
+
 
   var t = this;
   google.maps.event.addListener(this.map_, 'click', function(e) {
@@ -46,9 +64,11 @@ console.log('onAdd',this._elm);
     };
 
    // console.log('pos', pos);
+    if (inBounds(ll)) {
 
-    t._finder[t.startPosition?'setStart':'setEnd'](pos,ll);
-    t.startPosition = !t.startPosition;
+      t._finder[t.startPosition?'setStart':'setEnd'](pos,ll);
+      t.startPosition = !t.startPosition;
+    }
   });
 
   panes.overlayLayer.appendChild(this._elm);

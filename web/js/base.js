@@ -528,7 +528,8 @@
 		var path = t.currentPaintPoly;
 		var cp = t.splinePath;
 		var pth = path.getPath();
-
+		if (!t.result || !t.result.length)
+			return;
 		//if ((t.currentPos%5)==1) {
 			var mapPos = t.result[t.currentPos];
 			var data = t.getLayerData(mapPos[0],mapPos[1]);
@@ -871,6 +872,7 @@
 		personaSelect.addEventListener('change',function() {
 			finder.currentPersona = this.value;
 			finder.setPersona();
+			finder.mergeLayers();
 			finder.findPath();
 		});
 		for(var i in persona) {
