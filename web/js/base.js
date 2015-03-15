@@ -820,7 +820,7 @@
 		},
 		maskin:function() {
 			this.title = 'Maskinföraren';
-			this.params = {"backar":40,"berg":5,"forn":40,"hojd":15,"osamjord":-10,"skog":13,"urberg":20,"vag":100,"vatten":-100},
+			this.params = {"backar":-100,"berg":0,"forn":-100,"hojd":-1,"osamjord":20,"skog":20,"urberg":20,"vag":-100,"vatten":-100},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
