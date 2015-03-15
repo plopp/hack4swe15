@@ -144,7 +144,7 @@
 			lbl.innerHTML = 'Show debug layer';
 			t.obj.params.appendChild(prt);
 		})();
-		var refresh = addElm('a',{'class':'refresh'});
+		var refresh = addElm('a',{'className':'refresh'});
 		refresh.innerHTML = 'Räkna om';
 		refresh.addEventListener('click',function() {
 			t.changeCallback && t.changeCallback();
