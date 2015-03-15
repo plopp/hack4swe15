@@ -135,13 +135,13 @@ select {
 	font-size: 10pt;
 }
 
-#div_g .dygraph-label { font-family: Georgia, Verdana, serif; }
+#div_g .dygraph-label { font-family: Arial; }
 
-#div_g .dygraph-title { font-size: 8px; text-shadow: gray 2px 2px 2px; }
+#div_g .dygraph-title { font-size: 8px;}
 
-#div_g .dygraph-ylabel { font-size: 10px; text-shadow: gray -2px 2px 2px; }
+#div_g .dygraph-ylabel { font-size: 10px;}
 
-#div_g .dygraph-axis-label { font-size: 10px; text-shadow: gray -2px 2px 2px; }
+#div_g .dygraph-axis-label { font-size: 10px;}
 
 #div_g .dygraph-legend { 
 	font-size: 10px !important; 
@@ -155,6 +155,5 @@ select {
 	position: relative; 	
 	width: 200px; 
 	height: 60px; 
-	background-color: #FFFFFF;
 	z-index: 200;
 }
