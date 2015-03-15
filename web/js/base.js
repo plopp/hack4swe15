@@ -593,7 +593,7 @@
 	}
 
 	pathFinder.prototype.setPersona = function() {
-		console.trace("setPersona");
+		
 		var t = this;
 		var pers = t.personData = new persona[t.currentPersona]();
 		if (t.currentPersona!='custom') {
