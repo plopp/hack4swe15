@@ -1,0 +1,17 @@
+{
+	"id": "vatten",
+	"filename": "vatten.jpg",
+	"filetype": "image/jpeg",
+	"description": "Vattendrag",
+	"threshold": 0.5,
+	"channels": [
+		{
+			"channel": 0,
+			"inputrange": [ 0, 255 ],
+			"outputrange": [ 0.0, 1.0 ],
+			"displayrange": [ 0.0, 1.0 ],
+			"name": "",
+			"unit": "%"
+		}
+	]
+}
