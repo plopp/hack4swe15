@@ -871,7 +871,11 @@
 		var m = d.getElementById('metrics').classList;
 		m.remove(state?'open':'closed');
 		m.add(state?'closed':'open');
-		
+
+		var m = d.getElementById('logocnt').classList;
+		m.remove(state?'open':'closed');
+		m.add(state?'closed':'open');
+
 		var tl = d.getElementById('toggleParam').classList;
 		tl.remove(state?'fa-toggle-off':'fa-toggle-on');
 		tl.add(state?'fa-toggle-on':'fa-toggle-off');
