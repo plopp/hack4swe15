@@ -417,12 +417,12 @@
 		//if (t.currentPoly)
 			//t.currentPoly.setMap(null);
 
-		var p = t.posMarker = new google.maps.Marker({title:'Du',position:pathCoord[0],icon:'/nyancat.png',animation:google.maps.Animation.DROP});
+		var p = t.posMarker = new google.maps.Marker({title:'Du',position:pathCoord[0],icon:t.currentIcon,animation:google.maps.Animation.DROP});
 		p.setMap(this.map);
 		
 		var cp = t.currentPaintPoly = new google.maps.Polyline({
 			geodesic: false,
-			strokeColor: '#ff00ff',
+			strokeColor: t.currentColor,
 			strokeOpacity: 0.8,
 			strokeWeight: 8
 		});
@@ -868,7 +868,15 @@
 			var state = tl.contains('fa-toggle-off');
 			toggleStates(state);
 		});
-
+		d.addEventListener('keyup',function(e) {
+			if (e.keyCode == 17) {
+				finder.currentIcon = '/nyancat.png';
+				finder.currentColor='#ff00ff'; 
+			}
+		});
+		
+		finder.currentColor='#e67e22';
+		finder.currentIcon = '/pointer.png';
 		finder.currentPersona = 'custom';
 
 		finder.init(map,changeCallbak);
