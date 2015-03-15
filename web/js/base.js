@@ -635,8 +635,8 @@
 				//console.log('set',val,i);
 				var elm = d.getElementById('prm_'+i);
 				if (elm)
-					elm.value = -val;
-				t.layerMultiplier[i] = val;
+					elm.value = val;
+				t.layerMultiplier[i] = -val;
 			}
 		}
 	}
