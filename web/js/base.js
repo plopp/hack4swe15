@@ -326,6 +326,10 @@
 		if (t.startMarker)
 			t.startMarker.setMap(null);
 		t.startMarker = new google.maps.Marker({position:ll,icon:t.currentIcon,map:t.map,title:'Start',animation:google.maps.Animation.DROP});
+
+		d.getElementById('helptext').style.display = 'none';
+		d.getElementById('metrics').style.display = 'inherit';
+		
 		//console.log('set start',pos);
 	}
 
@@ -579,8 +583,6 @@
 		t.initPersona();
 		console.log("after initpersona");
 		console.log(t.result);
-		d.getElementById('helptext').style.display = 'none';
-		d.getElementById('metrics').style.display = '';
 		toggleStates(false);
 		t.plotPath(t.result);
 	}
@@ -589,7 +591,7 @@
 		var t = this;
 		var pers = t.personData;
 		t.personData.result = t.result;
-		console.log("Pers: ",pers);
+		console.trace("Pers: ",pers);
 		
 		var elm = d.getElementById('tbldata');
 		elm.innerHTML = '';

@@ -57,7 +57,7 @@ select {
 
 #params.open, #metrics.open {
 	max-height: 500px;
-	overflow-y: hidden;
+	overflow-y: auto;
 }
 
 #params li {
