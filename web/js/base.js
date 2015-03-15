@@ -586,12 +586,14 @@
             [[0,0]], {
 				rollPeriod: 7,
 				//legend: 'always',
-				title: 'Topology',
-				titleHeight: 16,
+				//title: 'Höjd',
+				//titleHeight: 16,
 				drawAxis: false,
 				drawXGrid: false,
 				drawYGrid: false,
 				drawLabels: false,
+				color: "#e67e22",
+				fillGraph: true,
 				labelsDivStyles: {
 					'text-align': 'right',
 					'background': 'none'
@@ -704,7 +706,7 @@
 					// 	t.topologyArr.push([i,null]);
 					// };
 					t.graph = graph;
-					t.akthojd = createElms(prt,'Aktuell höjd:');
+					t.akthojd = createElms(prt,'<span style="color:#e67e22">Aktuell höjd:</span>');
 				},
 				update:function(st) {
 					var t = this;
@@ -724,31 +726,32 @@
 					// 	t.topologyArr.push([i,null]);
 					// };
 					t.graph = graph;
-					t.road = createElms(prt,'<span style="color:#d3d3d3">Väg:</span>');
-					t.forrest = createElms(prt,'<span style="color:#00FFAD">Skog:</span>');
-					
+					t.road = createElms(prt,'<span style="color:#34495e">Väg:</span>');
+					t.forrest = createElms(prt,'<span style="color:#2ecc71">Skog:</span>');
 				},
 				update:function(st) {
 					var t = this;
-					t.road.innerHTML = round(100.0*(st['vag'].overThreshold/st['vag'].noi),1,'%');
-					t.forrest.innerHTML = round(100.0*(st['skog'].overThreshold/st['skog'].noi),1,'%');
+					var sum = st['vag'].overThreshold+st['skog'].overThreshold;
+					t.road.innerHTML = round(100.0*(st['vag'].overThreshold/sum),1,'%');
+					t.forrest.innerHTML = round(100.0*(st['skog'].overThreshold/sum),1,'%');
 					var totDist = 0;
 				},
 				after:function(st){
 					var t = this;
-					var vag = Math.round(100.0*(st['vag'].overThreshold/st['vag'].noi));
-					var skog = Math.round(100.0*(st['skog'].overThreshold/st['vag'].noi));
+					var sum = st['vag'].overThreshold+st['skog'].overThreshold;
+					var vag = Math.round(100.0*(st['vag'].overThreshold/sum));
+					var skog = Math.round(100.0*(st['skog'].overThreshold/sum));
 					var data = [
 					    {
 					        value: vag,
-					        color:"#d3d3d3",
-					        highlight: "#e3e3e3",
+					        color:"#34495e",
+					        highlight: "#34495e",
 					        label: "Väg"
 					    },
 					    {
 					        value: skog,
-					        color:"#00FFAD",
-					        highlight: "#00FFBB",
+					        color:"#2ecc71",
+					        highlight: "#27ae60",
 					        label: "Skog"
 					    }
 					];
