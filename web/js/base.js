@@ -320,8 +320,12 @@
 		});
 	}
 
-	pathFinder.prototype.setStart = function(pos) {
+	pathFinder.prototype.setStart = function(pos,ll) {
+		var t = this;
 		this.startPos = pos;
+		if (t.startMarker)
+			t.startMarker.setMap(null);
+		t.startMarker = new google.maps.Marker({position:ll,icon:t.currentIcon,map:t.map,title:'Start',animation:google.maps.Animation.DROP});
 		//console.log('set start',pos);
 	}
 
