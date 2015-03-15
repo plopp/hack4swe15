@@ -57,7 +57,7 @@ app.get('/1/layers/:id/bitmap', function (req, res) {
 	res.end(bin, 'binary');
 });
 
-app.use(express.static(__dirname + '/../web'));
+app.use(express.static(__dirname + '/web'));
 
 var server = app.listen(8080, function () {
 	var host = server.address().address;
