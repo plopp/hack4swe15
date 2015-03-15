@@ -568,6 +568,8 @@
 		t.initPersona();
 		console.log("after initpersona");
 		console.log(t.result);
+		d.getElementById('helptext').style.display = 'none';
+		d.getElementById('metrics').style.display = '';
 		toggleStates(false);
 		t.plotPath(t.result);
 	}
