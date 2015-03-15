@@ -820,7 +820,7 @@
 		},
 		maskin:function() {
 			this.title = 'Skogsbruk';
-			this.params = {"backar":0,"berg":-1,"forndist":40,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":30,"vag":40,"vatten":-40},
+			this.params = {"backar":0,"berg":-1,"forndist":-40,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":30,"vag":40,"vatten":-40},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
