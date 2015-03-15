@@ -675,6 +675,26 @@
 					}
 					t.dist.innerHTML = dist;
 				}
+			},{
+				init:function(prt) {
+					var t = this;
+					t.height = createElms(prt,'Höjdskillnad:');
+				},
+				update:function(st) {
+					var t = this;
+					t.height.innerHTML = round(st['hojd'].diff,1,'m');
+				}
+			},{
+				init:function(prt) {
+					var t = this;
+					t.inc = createElms(prt,'Stigning:');
+					t.dec = createElms(prt,'Fall:');
+				},
+				update:function(st) {
+					var t = this;
+					t.inc.innerHTML = round(st['hojd'].totalInc,1,'m');
+					t.dec.innerHTML = round(st['hojd'].totalDec,1,'m');
+				}
 			},
 			{
 				init:function(prt,graph) {
@@ -688,6 +708,7 @@
 				},
 				update:function(st) {
 					var t = this;
+					console.log(round(st['hojd'].lastVal,1,'m'));
 					t.akthojd.innerHTML = round(st['hojd'].lastVal,1,'m');
 					t.topologyArr.push([Math.round(st.distance),st['hojd'].lastVal]);
 					var totDist = 0;
@@ -703,12 +724,14 @@
 					// 	t.topologyArr.push([i,null]);
 					// };
 					t.graph = graph;
-					t.akthojd = createElms(prt,'Väg:');
+					t.road = createElms(prt,'<span style="color:#d3d3d3">Väg:</span>');
+					t.forrest = createElms(prt,'<span style="color:#00FFAD">Skog:</span>');
 					
 				},
 				update:function(st) {
 					var t = this;
-					t.akthojd.innerHTML = round(100.0*(st['vag'].overThreshold/st['vag'].noi),1,'%');
+					t.road.innerHTML = round(100.0*(st['vag'].overThreshold/st['vag'].noi),1,'%');
+					t.forrest.innerHTML = round(100.0*(st['skog'].overThreshold/st['skog'].noi),1,'%');
 					var totDist = 0;
 				},
 				after:function(st){
@@ -771,20 +794,11 @@
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
-					t.height = createElms(prt,'Höjdskillnad:');
-				},
-				update:function(st) {
-					var t = this;
-					t.height.innerHTML = round(st['hojd'].diff,1,'m');
-				}
-			},{
-				init:function(prt) {
-					var t = this;
 					t.liter = createElms(prt,'Diesel:');
 				},
 				update:function(st) {
 					var t = this;
-					t.liter.innerHTML = round(st.distance*0.03,1,'L');
+					t.liter.innerHTML = round(st.distance*0.024,1,'L');
 				}
 			}]);
 		},
