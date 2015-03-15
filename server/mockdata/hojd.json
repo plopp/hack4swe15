@@ -3,11 +3,12 @@
 	"filename": "hojd.jpg",
 	"filetype": "image/jpeg",
 	"description": "Höjd",
+	"threshold": 140,
 	"channels": [
 		{
 			"channel": 0,
 			"inputrange": [ 0, 255 ],
-			"outputrange": [ 0, 1 ],
+			"outputrange": [ 0.0, 1.0 ],
 			"displayrange": [ 118.21, 304.61 ],
 			"name": "Höjd",
 			"unit": "m"

@@ -481,14 +481,21 @@
 			st.total = (t.stats[i].total||0)+cd;
 			st.med = st.total/st.noi;
 
-			if (!st.overThreshold)
+			if (st.overThreshold === undefined){
 				st.overThreshold =0;
-			if (!st.underThreshold)
+			}
+			else{
+				if (cd>t.layer[i].threshold)
+					st.overThreshold++;	
+			}
+
+			if (st.underThreshold === undefined){
 				st.underThreshold =0;
-			if (cd>t.layer[i].tresholdLow||0.1)
-				st.overThreshold++;
-			if (cd<t.layer[i].tresholdHigh||0.9)
-				st.underThreshold++;
+			}
+			else{
+				if (cd<=t.layer[i].threshold)
+					st.underThreshold++;
+			}
 		}
 		
 		t.stats.distance = t.stats.totalDistance*percent;
@@ -526,6 +533,13 @@
 			t.plotTimer = setTimeout(function() { t.plotSingle(); },1);
 		}
 		else {
+			if (t.personData) {
+				for(var i in t.personData.keys) {
+					var k = t.personData.keys[i];
+					if(k.after)
+						k.after.apply(t.personData,[t.stats]);
+				}
+			}
 			console.log(t.stats);
 			t.posMarker.setAnimation(google.maps.Animation.BOUNCE);
 		}
@@ -666,18 +680,67 @@
 				init:function(prt,graph) {
 					var t = this;
 					t.topologyArr = [];
-					for (var i = 0; i < t.result.length; i++) {
-						t.topologyArr.push([i,null]);
-					};
+					// for (var i = 0; i < t.result.length; i++) {
+					// 	t.topologyArr.push([i,null]);
+					// };
 					t.graph = graph;
 					t.akthojd = createElms(prt,'Aktuell höjd:');
 				},
 				update:function(st) {
 					var t = this;
 					t.akthojd.innerHTML = round(st['hojd'].lastVal,1,'m');
-					t.topologyArr[st['hojd'].noi]= [st['hojd'].noi,st['hojd'].lastVal];
+					t.topologyArr.push([Math.round(st.distance),st['hojd'].lastVal]);
 					var totDist = 0;
-					t.graph.updateOptions({'file': t.topologyArr});
+					console.log(st);
+					t.graph.updateOptions({'file': t.topologyArr,'labels':["m","Höjd"]});
+				}
+			},
+			{
+				init:function(prt,graph) {
+					var t = this;
+					t.topologyArr = [];
+					// for (var i = 0; i < t.result.length; i++) {
+					// 	t.topologyArr.push([i,null]);
+					// };
+					t.graph = graph;
+					t.akthojd = createElms(prt,'Väg:');
+					
+				},
+				update:function(st) {
+					var t = this;
+					t.akthojd.innerHTML = round(100.0*(st['vag'].overThreshold/st['vag'].noi),1,'%');
+					var totDist = 0;
+				},
+				after:function(st){
+					var t = this;
+					var vag = Math.round(100.0*(st['vag'].overThreshold/st['vag'].noi));
+					var skog = Math.round(100.0*(st['skog'].overThreshold/st['vag'].noi));
+					var data = [
+					    {
+					        value: vag,
+					        color:"#d3d3d3",
+					        highlight: "#e3e3e3",
+					        label: "Väg"
+					    },
+					    {
+					        value: skog,
+					        color:"#00FFAD",
+					        highlight: "#00FFBB",
+					        label: "Skog"
+					    }
+					];
+					var ctx = document.getElementById("myChart").getContext("2d");
+					if(t.donut === undefined){
+						t.donut = new Chart(ctx).Doughnut(data,{});
+					}
+					else{
+						t.donut.removeData();
+						t.donut.removeData();
+						t.donut.addData(data[0],undefined,true);
+						t.donut.addData(data[1],undefined,true);
+						t.donut.reflow();
+						t.donut.update();
+					}
 				}
 			}];
 

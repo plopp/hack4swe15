@@ -3,6 +3,7 @@
 	"filename": "forn.gif",
 	"filetype": "image/gif",
 	"description": "Fornlämningar",
+	"threshold": 0.5,
 	"channels": [
 		{
 			"channel": 0,

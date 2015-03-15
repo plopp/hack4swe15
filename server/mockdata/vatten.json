@@ -3,6 +3,7 @@
 	"filename": "vatten.jpg",
 	"filetype": "image/jpeg",
 	"description": "Vattendrag",
+	"threshold": 0.5,
 	"channels": [
 		{
 			"channel": 0,

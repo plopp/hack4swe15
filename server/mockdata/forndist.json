@@ -3,6 +3,7 @@
 	"filename": "forndist.jpg",
 	"filetype": "image/jpeg",
 	"description": "Fornlämningar dragningskraft",
+	"threshold": 0.5,
 	"channels": [
 		{
 			"channel": 0,

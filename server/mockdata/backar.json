@@ -3,6 +3,7 @@
 	"filename": "backar.jpg",
 	"filetype": "image/jpeg",
 	"description": "Bäckar",
+	"threshold": 0.5,
 	"channels": [
 		{
 			"channel": 0,

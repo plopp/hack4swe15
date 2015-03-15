@@ -3,6 +3,7 @@
 	"filename": "karta.jpg",
 	"filetype": "image/jpeg",
 	"description": "Kartlager, Debug",
+	"threshold": 0.5,
 	"channels": [
 		{
 			"channel": 0,

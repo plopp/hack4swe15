@@ -3,6 +3,7 @@
 	"filename": "skog.jpg",
 	"filetype": "image/jpeg",
 	"description": "Skog",
+	"threshold": 0.5,
 	"channels": [
 		{
 			"channel": 0,
