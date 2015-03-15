@@ -35,19 +35,7 @@ console.log('onAdd',this._elm);
   var t = this;
   
   function inBounds(point) {
-    console.log(t.bounds_);
-      var eastBound = point.long < t.bounds_.NE.long;
-      var westBound = point.long > t.bounds_.SW.long;
-      var inLong;
-
-      if (t.bounds_.NE.long < t.bounds_.SW.long) {
-          inLong = eastBound || westBound;
-      } else {
-          inLong = eastBound && westBound;
-      }
-
-      var inLat = point.lat > t.bounds_.SW.lat && point.lat < t.bounds_.NE.lat;
-      return inLat && inLong;
+    return true;
   }
 
 
