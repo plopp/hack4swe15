@@ -35,8 +35,9 @@ console.log('onAdd',this._elm);
   var t = this;
   
   function inBounds(point) {
-    console.log('bounds',t.bounds_);
-    return true;
+    console.log('bounds---',t.bounds_);
+    return t.bounds_.contains(point);
+    //return true;
   }
 
 

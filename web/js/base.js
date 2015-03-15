@@ -580,10 +580,10 @@
 		}
 //		console.log('findpath',t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y,t.size);
 		t.result = pathfinder.findPath(t.startPos.x, t.startPos.y, t.endPos.x, t.endPos.y, grid);
-		console.log("before initpersona");
+		//console.log("before initpersona");
 		t.initPersona();
-		console.log("after initpersona");
-		console.log(t.result);
+		//console.log("after initpersona");
+		//console.log(t.result);
 		toggleStates(false);
 		t.plotPath(t.result);
 	}
@@ -636,7 +636,7 @@
 				var elm = d.getElementById('prm_'+i);
 				if (elm)
 					elm.value = val;
-				t.layerMultiplier[i] = -val;
+				t.layerMultiplier[i] = val;
 			}
 		}
 	}
