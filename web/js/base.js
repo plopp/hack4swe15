@@ -482,7 +482,7 @@
 			}
 			if (!st.diff)
 				st.diff = 0;
-			st.diff+=(st.lastVal-cd); 
+			st.diff+=(cd-st.lastVal); 
 			
 			if (st.totalInc === undefined){
 				st.totalInc = 0;
