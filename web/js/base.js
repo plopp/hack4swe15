@@ -801,12 +801,12 @@
 	var persona = {
 		custom:function() {
 			this.title = 'Egen';
-			this.params = {"backar":"-1","berg":"-1","forn":-1,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":-1,"vag":"-1","vatten":-1},
+			this.params = {"backar":"-1","berg":"-1","forndist":-1,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":-1,"vag":"-1","vatten":-1},
 			this.keys = defaultKeys;
 		},
 		falnn:function() {
-			this.title = 'Flanören';
-			this.params = {"backar":40,"berg":-1,"forn":-40,"hojd":19,"osamjord":-1,"skog":-1,"urberg":-1,"vag":-6,"vatten":39},
+			this.title = 'Naturupplevelse';
+			this.params = {"backar":0,"berg":0,"forndist":40,"hojd":0,"osamjord":0,"skog":0,"urberg":0,"vag":0,"vatten":10},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
@@ -819,8 +819,8 @@
 			}]);
 		},
 		maskin:function() {
-			this.title = 'Maskinföraren';
-			this.params = {"backar":-100,"berg":0,"forn":-100,"hojd":-1,"osamjord":20,"skog":20,"urberg":20,"vag":-100,"vatten":-100},
+			this.title = 'Skogsbruk';
+			this.params = {"backar":0,"berg":-1,"forndist":40,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":30,"vag":40,"vatten":-40},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;
@@ -833,22 +833,8 @@
 			}]);
 		},
 		runner:function() {
-			this.title = 'Löparen';
-			this.params = {"backar":40,"berg":-1,"forn":-1,"hojd":33,"osamjord":-1,"skog":28,"urberg":-1,"vag":-40,"vatten":40},
-			this.keys = defaultKeys.concat([{
-				init:function(prt) {
-					var t = this;
-					t.cal = createElms(prt,'Kalorier:');
-				},
-				update:function(st) {
-					var t = this;
-					t.cal.innerHTML = round(st.distance*0.03,1,'kcal');
-				}
-			}]);
-		},
-		badarn:function() {
-			this.title = 'Badarn';
-			this.params = {"backar":-39,"berg":-1,"forn":-1,"hojd":-1,"osamjord":-1,"skog":-1,"urberg":-1,"vag":40,"vatten":-40},
+			this.title = 'Träning';
+			this.params = {"backar":40,"berg":-1,"forndist":-1,"hojd":33,"osamjord":-1,"skog":28,"urberg":-1,"vag":-40,"vatten":40},
 			this.keys = defaultKeys.concat([{
 				init:function(prt) {
 					var t = this;

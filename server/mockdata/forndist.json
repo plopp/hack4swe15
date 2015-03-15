@@ -7,7 +7,7 @@
 	"channels": [
 		{
 			"channel": 0,
-			"inputrange": [ 0, 255 ],
+			"inputrange": [ 0, 150 ],
 			"outputrange": [ 0.0, 1.0 ],
 			"displayrange": [ 0.0, 1.0 ],
 			"name": "delta",
